@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /backup/
+Disallow: /config/
+Disallow: /debug.php
+Disallow: /logs/
+
+# Hidden directories for gobuster discovery
+# /admin/ - Administrative panel
+# /backup/ - Backup files
+# /config/ - Configuration files
+# /uploads/ - File uploads
+# /api/ - API endpoints

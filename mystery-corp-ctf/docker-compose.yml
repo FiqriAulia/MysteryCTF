@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./web
+    ports:
+      - "0.0.0.0:8080:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+    volumes:
+      - ./web:/var/www/html
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "0.0.0.0:3306:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+
+  hidden-service:
+    build: ./web
+    ports:
+      - "0.0.0.0:8081:80"
+    environment:
+      - HIDDEN_MODE=true
+    volumes:
+      - ./web/hidden:/var/www/html
+
+volumes:
+  mysql_data:
