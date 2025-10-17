@@ -22,7 +22,7 @@ git add .
 git commit -m "Initial CTF setup"
 
 # Add remote origin
-git remote add origin https://github.com/YOUR_USERNAME/mystery-corp-ctf.git
+git remote add origin https://github.com/FiqriAulia/MysteryCTF.git
 
 # Push to GitHub
 git push -u origin main
@@ -33,8 +33,8 @@ git push -u origin main
 ### Untuk Pengguna Baru
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/mystery-corp-ctf.git
-cd mystery-corp-ctf
+git clone https://github.com/FiqriAulia/MysteryCTF.git
+cd MysteryCTF
 
 # Quick setup (creates .env from template)
 ./setup.sh
@@ -46,8 +46,8 @@ cd mystery-corp-ctf
 ### Untuk Host CTF
 ```bash
 # Clone dan setup
-git clone https://github.com/YOUR_USERNAME/mystery-corp-ctf.git
-cd mystery-corp-ctf
+git clone https://github.com/FiqriAulia/MysteryCTF.git
+cd MysteryCTF
 ./setup.sh
 
 # Customize .env jika perlu
@@ -74,8 +74,8 @@ nano .env
 ### Persiapan Competition:
 ```bash
 # 1. Clone repository
-git clone https://github.com/YOUR_USERNAME/mystery-corp-ctf.git
-cd mystery-corp-ctf
+git clone https://github.com/FiqriAulia/MysteryCTF.git
+cd MysteryCTF
 
 # 2. Setup environment
 ./setup.sh
@@ -118,7 +118,7 @@ mystery-corp-ctf/
 
 ## 🚀 One-Command Deploy
 ```bash
-curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/mystery-corp-ctf/main/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/FiqriAulia/MysteryCTF/main/setup.sh | bash
 ```
 
 ## 🔄 Updates dan Maintenance

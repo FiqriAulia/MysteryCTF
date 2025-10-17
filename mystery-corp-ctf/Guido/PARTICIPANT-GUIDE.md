@@ -4,6 +4,7 @@
 Selamat datang, Detective! Anda telah ditugaskan untuk menyelidiki **Mystery Corporation** yang diduga terlibat dalam aktivitas mencurigakan. Tugas Anda adalah mengumpulkan bukti digital dengan menemukan **6 flag tersembunyi**.
 
 ## 🌐 Target Information
+**Repository:** https://github.com/FiqriAulia/MysteryCTF.git  
 **Target IP:** `[AKAN_DIBERIKAN_OLEH_HOST]`  
 **Ports:** 8080, 8081, 3306
 

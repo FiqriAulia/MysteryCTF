@@ -6,8 +6,9 @@
 
 #### 1. Persiapan Environment
 ```bash
-# Clone atau download CTF files
-cd /path/to/ctf/directory
+# Clone CTF from GitHub
+git clone https://github.com/FiqriAulia/MysteryCTF.git
+cd MysteryCTF
 
 # Pastikan Docker dan Docker Compose terinstall
 docker --version

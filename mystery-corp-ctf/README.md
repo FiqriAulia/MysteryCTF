@@ -19,8 +19,8 @@ Anda adalah seorang detective yang menyelidiki aktivitas mencurigakan di Mystery
 #### Quick Start (GitHub)
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/mystery-corp-ctf.git
-cd mystery-corp-ctf
+git clone https://github.com/FiqriAulia/MysteryCTF.git
+cd MysteryCTF
 
 # Setup environment
 ./setup.sh
