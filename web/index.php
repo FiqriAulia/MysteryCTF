@@ -18,21 +18,40 @@
         <h1>🕵️ Mystery Corporation</h1>
         <p><em>Welcome to the employee portal. Something strange has been happening at our company...</em></p>
         
+        <?php
+        // Show hints based on global difficulty level set by admin
+        $difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficulty_setting.txt') : 'beginner';
+        if ($difficulty !== 'advanced') {
+        ?>
         <div class="hint">
             <strong>🔍 Investigation Notes:</strong><br>
+            <?php if ($difficulty == 'beginner'): ?>
             • Recent security incidents reported<br>
             • Employee database may contain clues<br>
             • Some services might be running on different ports<br>
             • Start with basic reconnaissance...<br>
-            • <a href="submit.php">🚀 Submit flags here</a> | <a href="leaderboard.php">🏆 View leaderboard</a>
+            • Try nmap for port scanning: <code>nmap -p- target</code><br>
+            • Use gobuster for directories: <code>gobuster dir -u http://target -w wordlist</code><br>
+            <?php else: ?>
+            • Recent security incidents reported<br>
+            • Employee database may contain clues<br>
+            • Start with reconnaissance<br>
+            <?php endif; ?>
+            • <a href="submit.php">🚀 Submit flags here</a> | <a href="leaderboard.php">🏆 View leaderboard</a> | <a href="realtime-leaderboard.php">📺 Live Board</a>
         </div>
+        <?php } else { ?>
+        <div style="background: #f8d7da; padding: 10px; margin: 10px 0; border-left: 4px solid #dc3545;">
+            <strong>🔴 Advanced Mode:</strong> No hints provided. Good luck!<br>
+            <a href="submit.php">🚀 Submit flags</a> | <a href="leaderboard.php">🏆 Leaderboard</a> | <a href="difficulty.php">⚙️ Change difficulty</a>
+        </div>
+        <?php } ?>
 
         <?php
         session_start();
         
         if (isset($_SESSION['user'])) {
             echo "<p>Welcome back, " . htmlspecialchars($_SESSION['user']) . "!</p>";
-            echo "<a href='dashboard.php'>Go to Dashboard</a> | <a href='submit.php'>🚀 Submit Flag</a> | <a href='leaderboard.php'>🏆 Leaderboard</a> | <a href='logout.php'>Logout</a>";
+            echo "<a href='dashboard.php'>Go to Dashboard</a> | <a href='submit.php'>🚀 Submit Flag</a> | <a href='leaderboard.php'>🏆 Leaderboard</a> | <a href='realtime-leaderboard.php'>📺 Live Board</a> | <a href='logout.php'>Logout</a>";
         } else {
         ?>
         
@@ -80,7 +99,12 @@
                 <button type="submit" name="login">Login</button>
             </form>
             
-            <p><small>Hint: Try default credentials or explore SQL injection techniques</small></p>
+            <?php if ($difficulty == 'beginner'): ?>
+            <p><small>Hint: Try admin/admin123 or SQL injection: <code>admin' OR '1'='1'-- </code></small></p>
+            <?php elseif ($difficulty == 'intermediate'): ?>
+            <p><small>Hint: Try default credentials or SQL injection techniques</small></p>
+            <?php endif; ?>
+            <p><small>Difficulty: <strong><?php echo ucfirst($difficulty); ?></strong> Mode (Set by Admin)</small></p>
         </div>
         
         <?php } ?>

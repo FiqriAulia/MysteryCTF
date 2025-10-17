@@ -283,6 +283,32 @@ $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['
             ?>
         </div>
 
+        <!-- Difficulty Control -->
+        <div class="widget">
+            <h3>🎯 Competition Settings</h3>
+            <?php
+            // Handle difficulty change
+            if (isset($_POST['set_global_difficulty'])) {
+                $global_difficulty = $_POST['global_difficulty'];
+                // Store in a simple file or database
+                file_put_contents('../difficulty_setting.txt', $global_difficulty);
+                echo "<div class='alert'>✅ Difficulty set to: " . ucfirst($global_difficulty) . "</div>";
+            }
+            
+            $current_difficulty = file_exists('../difficulty_setting.txt') ? file_get_contents('../difficulty_setting.txt') : 'beginner';
+            ?>
+            <form method="POST">
+                <label>Global Difficulty Level:</label><br>
+                <select name="global_difficulty" style="padding: 8px; margin: 10px 0;">
+                    <option value="beginner" <?php echo $current_difficulty == 'beginner' ? 'selected' : ''; ?>>🟢 Beginner (Full Hints)</option>
+                    <option value="intermediate" <?php echo $current_difficulty == 'intermediate' ? 'selected' : ''; ?>>🟡 Intermediate (Limited Hints)</option>
+                    <option value="advanced" <?php echo $current_difficulty == 'advanced' ? 'selected' : ''; ?>>🔴 Advanced (No Hints)</option>
+                </select><br>
+                <button type="submit" name="set_global_difficulty">Set Difficulty for All Participants</button>
+            </form>
+            <p><small>Current: <strong><?php echo ucfirst($current_difficulty); ?></strong> Mode</small></p>
+        </div>
+
         <!-- Admin Controls -->
         <div class="controls">
             <h3>🔧 Admin Controls</h3>

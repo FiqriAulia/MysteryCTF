@@ -33,6 +33,7 @@
             <span style="float: right;">
                 <a href="index.php">🏠 Home</a> | 
                 <a href="submit.php">🚀 Submit Flag</a> |
+                <a href="realtime-leaderboard.php">📺 Live Board</a> |
                 <a href="admin/admin_dashboard.php">👑 Admin</a>
             </span>
         </div>
@@ -84,11 +85,12 @@
             team_name, 
             SUM(points) as total_points, 
             COUNT(*) as flags_found,
+            MIN(submitted_at) as first_submission,
             MAX(submitted_at) as last_submission,
             GROUP_CONCAT(flag_name ORDER BY submitted_at) as flags_list
             FROM flag_submissions 
             GROUP BY team_name 
-            ORDER BY total_points DESC, flags_found DESC, last_submission ASC";
+            ORDER BY total_points DESC, flags_found DESC, first_submission ASC";
         
         $leaderboard_result = $conn->query($leaderboard_query);
         
@@ -100,7 +102,9 @@
                 <th>Points</th>
                 <th>Progress</th>
                 <th>Flags</th>
-                <th>Last Submission</th>
+                <th>First Submit</th>
+                <th>Last Submit</th>
+                <th>Duration</th>
                 <th>Trophy</th>
             </tr>";
             
@@ -132,7 +136,11 @@
                     <div class='team-details'>" . round($progress_percentage, 1) . "%</div>
                 </td>";
                 echo "<td><strong>" . $row['flags_found'] . "/6</strong></td>";
+                $duration = $row['first_submission'] && $row['last_submission'] ? 
+                    round((strtotime($row['last_submission']) - strtotime($row['first_submission'])) / 60, 1) : 0;
+                echo "<td><small>" . date('H:i:s', strtotime($row['first_submission'])) . "</small></td>";
                 echo "<td><small>" . date('H:i:s', strtotime($row['last_submission'])) . "</small></td>";
+                echo "<td><small>" . $duration . "m</small></td>";
                 echo "<td class='trophy'>$trophy</td>";
                 echo "</tr>";
                 $rank++;
@@ -196,11 +204,11 @@
             
             if ($recent_result && $recent_result->num_rows > 0) {
                 echo "<table>";
-                echo "<tr><th>Time</th><th>Team</th><th>Flag</th><th>Points</th></tr>";
+                echo "<tr><th>Date & Time</th><th>Team</th><th>Flag</th><th>Points</th></tr>";
                 
                 while ($row = $recent_result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td><small>" . date('H:i:s', strtotime($row['submitted_at'])) . "</small></td>";
+                    echo "<td><small>" . date('M j, H:i:s', strtotime($row['submitted_at'])) . "</small></td>";
                     echo "<td>" . htmlspecialchars($row['team_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['flag_name']) . "</td>";
                     echo "<td><strong>+" . $row['points'] . "</strong></td>";

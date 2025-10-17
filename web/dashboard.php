@@ -54,7 +54,12 @@ $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['
                 <input type="text" name="search" placeholder="Search employees..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                 <button type="submit">Search</button>
             </form>
+            <?php if ($difficulty == 'beginner'): ?>
+            <small>Try searching for: John, IT, or SQL injection: <code>' UNION SELECT 1,2,3,4,5-- </code></small>
+            <?php elseif ($difficulty == 'intermediate'): ?>
             <small>Try searching for: John, IT, or use SQL injection techniques</small>
+            <?php endif; ?>
+            <small>Mode: <strong><?php echo ucfirst($difficulty); ?></strong></small>
         </div>
 
         <?php
@@ -96,16 +101,29 @@ $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['
         </div>
         <?php endif; ?>
 
+        <?php
+        $difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficulty_setting.txt') : 'beginner';
+        if ($difficulty !== 'advanced'):
+        ?>
         <div style="margin-top: 30px; padding: 15px; background: #e6f3ff; border: 1px solid #99ccff;">
             <h3>🕵️ Investigation Tips</h3>
             <ul>
+                <?php if ($difficulty == 'beginner'): ?>
                 <li>Try SQL injection in the search field: <code>' UNION SELECT 1,2,3,4,5-- </code></li>
+                <li>Extract user data: <code>' UNION SELECT 1,username,password,role,5 FROM users-- </code></li>
                 <li>Look for XSS vulnerabilities in employee notes</li>
                 <li>Use nmap to scan for other services: <code>nmap -p- localhost</code></li>
                 <li>Try directory enumeration with gobuster</li>
                 <li>Check for hidden services mentioned in employee notes</li>
+                <?php else: ?>
+                <li>Try SQL injection in the search field</li>
+                <li>Look for XSS vulnerabilities in employee notes</li>
+                <li>Use reconnaissance tools for discovery</li>
+                <li>Check for hidden services and directories</li>
+                <?php endif; ?>
             </ul>
         </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>
