@@ -6,7 +6,12 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-$conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
+$conn = new mysqli(
+    getenv('DB_HOST') ?: 'db',
+    getenv('DB_USER') ?: 'root',
+    getenv('DB_PASS') ?: 'mystery123',
+    getenv('DB_NAME') ?: 'mystery_corp'
+);
 ?>
 
 <!DOCTYPE html>

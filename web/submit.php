@@ -36,7 +36,12 @@
         <h2>🕵️ Submit Your Flag</h2>
         
         <?php
-        $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
+        $conn = new mysqli(
+            getenv('DB_HOST') ?: 'db',
+            getenv('DB_USER') ?: 'root', 
+            getenv('DB_PASS') ?: 'mystery123',
+            getenv('DB_NAME') ?: 'mystery_corp'
+        );
         
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -55,12 +60,12 @@
 
         // Flag definitions with points
         $flags = [
-            $_ENV['FLAG_1'] => ['name' => 'Hidden Service Discovery', 'points' => 100],
-            $_ENV['FLAG_2'] => ['name' => 'Backup File Discovery', 'points' => 150],
-            $_ENV['FLAG_3'] => ['name' => 'SQL Injection Master', 'points' => 200],
-            $_ENV['FLAG_4'] => ['name' => 'XSS Discovery', 'points' => 200],
-            $_ENV['FLAG_5'] => ['name' => 'Admin Access', 'points' => 250],
-            $_ENV['FLAG_6'] => ['name' => 'Vault Master', 'points' => 300]
+            (getenv('FLAG_1') ?: 'FLAG{hidden_service_discovered_8081}') => ['name' => 'Hidden Service Discovery', 'points' => 100],
+            (getenv('FLAG_2') ?: 'FLAG{backup_files_exposed_g0bust3r}') => ['name' => 'Backup File Discovery', 'points' => 150],
+            (getenv('FLAG_3') ?: 'FLAG{sql_injection_master_b4d1c0d3}') => ['name' => 'SQL Injection Master', 'points' => 200],
+            (getenv('FLAG_4') ?: 'FLAG{xss_found_h3r3}') => ['name' => 'XSS Discovery', 'points' => 200],
+            (getenv('FLAG_5') ?: 'FLAG{admin_access_s3cr3t_pr0j3ct}') => ['name' => 'Admin Access', 'points' => 250],
+            (getenv('FLAG_6') ?: 'FLAG{vault_master_mystery_solved_c0mpl3t3}') => ['name' => 'Vault Master', 'points' => 300]
         ];
 
         if (isset($_POST['submit_flag'])) {
