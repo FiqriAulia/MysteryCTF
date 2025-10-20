@@ -15,9 +15,18 @@ echo "📍 Host IP Address: $HOST_IP"
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
-    echo "❌ Docker is not running. Please start Docker first."
-    exit 1
+    echo "⚠️  Docker not detected. Trying to start Docker service..."
+    sudo systemctl start docker 2>/dev/null || true
+    sleep 2
+    if ! docker info > /dev/null 2>&1; then
+        echo "❌ Docker is not running. Please start Docker manually:"
+        echo "   sudo systemctl start docker"
+        echo "   or open Docker Desktop"
+        exit 1
+    fi
 fi
+
+echo "✅ Docker is running"
 
 # Check if Docker Compose is available (try both versions)
 if command -v docker-compose &> /dev/null; then
