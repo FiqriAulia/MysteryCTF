@@ -33,7 +33,7 @@ if (isset($_POST['login'])) {
         header("Location: dashboard.php");
         exit();
     } else {
-        $login_error = "Invalid credentials! Try common passwords...";
+        $login_error = "Invalid credentials! Try common passwords... [Debug: Query executed, rows returned: " . ($result ? $result->num_rows : 'query failed') . "]";
     }
     
     $conn->close();
@@ -141,7 +141,7 @@ if (!$conn->connect_error) {
                                         </form>
             
             <?php if ($difficulty == 'beginner'): ?>
-                                        <div class="alert alert-info mt-3"><small><i class="fas fa-lightbulb"></i> Hint: Try admin/admin123 or SQL injection: <code>admin' OR '1'='1'-- </code></small></div>
+                                        <div class="alert alert-info mt-3"><small><i class="fas fa-lightbulb"></i> Hint: Try admin/admin123 or SQL injection: <code>' OR 1=1#</code> or <code>admin' OR '1'='1'-- </code></small></div>
             <?php elseif ($difficulty == 'intermediate'): ?>
                                         <div class="alert alert-info mt-3"><small><i class="fas fa-lightbulb"></i> Hint: Try default credentials or SQL injection techniques</small></div>
             <?php endif; ?>

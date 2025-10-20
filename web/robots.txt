@@ -4,6 +4,7 @@ Disallow: /backup/
 Disallow: /config/
 Disallow: /debug.php
 Disallow: /logs/
+Disallow: /network-logs/
 
 # Hidden directories for gobuster discovery
 # /admin/ - Administrative panel
@@ -11,3 +12,4 @@ Disallow: /logs/
 # /config/ - Configuration files
 # /uploads/ - File uploads
 # /api/ - API endpoints
+# /network-logs/ - Network traffic analysis (pcap files)

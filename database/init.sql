@@ -28,16 +28,16 @@ CREATE TABLE secrets (
 
 -- Flag 1: SQL Injection vulnerability (weak password)
 INSERT INTO users (username, password, role) VALUES 
-('admin', 'admin123', 'admin'),
 ('guest', 'guest', 'user'),
-('detective', 'sherlock', 'investigator');
+('detective', 'sherlock', 'investigator'),
+('admin', 'admin123', 'admin');
 
 -- Flag 2: Hidden in employee data  
 INSERT INTO employees (name, department, salary, secret_note) VALUES 
 ('John Smith', 'IT', 75000.00, 'Nothing suspicious here'),
-('Jane Doe', 'HR', 65000.00, 'Check admin panel for next clue'),
+('Jane Doe', 'HR', 65000.00, 'Check network traffic logs for admin activities'),
 ('Bob Wilson', 'Finance', 80000.00, 'Check the hidden service on port 8081'),
-('Alice Brown', 'Security', 90000.00, 'XSS payload: <script>alert("Found XSS vulnerability!")</script>');
+('Alice Brown', 'Security', 90000.00, 'XSS payload: <script>alert("FLAG{xss_found_h3r3}")</script>');
 
 -- Flag 3: In secrets table (requires admin access)
 INSERT INTO secrets (title, content, access_level) VALUES 
