@@ -1,30 +1,30 @@
+<?php
+session_start();
+
+// Show hints based on global difficulty level set by admin
+$difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficulty_setting.txt') : 'beginner';
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Mystery Corporation - Employee Portal</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
-        .login-form { max-width: 400px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; }
-        .form-group { margin: 15px 0; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ddd; }
-        button { background: #007cba; color: white; padding: 10px 20px; border: none; cursor: pointer; }
-        .error { color: red; margin: 10px 0; }
-        .hint { background: #e7f3ff; padding: 10px; margin: 10px 0; border-left: 4px solid #007cba; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <h1>🕵️ Mystery Corporation</h1>
-        <p><em>Welcome to the employee portal. Something strange has been happening at our company...</em></p>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h1 class="text-center mb-4"><i class="fas fa-user-secret"></i> Mystery Corporation</h1>
+                        <p class="text-muted text-center"><em>Welcome to the employee portal. Something strange has been happening at our company...</em></p>
         
         <?php
-        // Show hints based on global difficulty level set by admin
-        $difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficulty_setting.txt') : 'beginner';
         if ($difficulty !== 'advanced') {
         ?>
-        <div class="hint">
-            <strong>🔍 Investigation Notes:</strong><br>
+                        <div class="alert alert-info border-start border-4 border-primary">
+                            <strong><i class="fas fa-search"></i> Investigation Notes:</strong><br>
             <?php if ($difficulty == 'beginner'): ?>
             • Recent security incidents reported<br>
             • Employee database may contain clues<br>
@@ -37,26 +37,39 @@
             • Employee database may contain clues<br>
             • Start with reconnaissance<br>
             <?php endif; ?>
-            • <a href="submit.php">🚀 Submit flags here</a> | <a href="leaderboard.php">🏆 View leaderboard</a> | <a href="realtime-leaderboard.php">📺 Live Board</a>
-        </div>
+                            • <a href="submit.php" class="btn btn-sm btn-primary me-2"><i class="fas fa-rocket"></i> Submit Flags</a>
+                            <a href="leaderboard.php" class="btn btn-sm btn-warning me-2"><i class="fas fa-trophy"></i> Leaderboard</a>
+                            <a href="realtime-leaderboard.php" class="btn btn-sm btn-success"><i class="fas fa-tv"></i> Live Board</a>
+                        </div>
         <?php } else { ?>
-        <div style="background: #f8d7da; padding: 10px; margin: 10px 0; border-left: 4px solid #dc3545;">
-            <strong>🔴 Advanced Mode:</strong> No hints provided. Good luck!<br>
-            <a href="submit.php">🚀 Submit flags</a> | <a href="leaderboard.php">🏆 Leaderboard</a> | <a href="difficulty.php">⚙️ Change difficulty</a>
-        </div>
+                        <div class="alert alert-danger border-start border-4 border-danger">
+                            <strong><i class="fas fa-circle text-danger"></i> Advanced Mode:</strong> No hints provided. Good luck!<br>
+                            <a href="submit.php" class="btn btn-sm btn-primary me-2"><i class="fas fa-rocket"></i> Submit Flags</a>
+                            <a href="leaderboard.php" class="btn btn-sm btn-warning me-2"><i class="fas fa-trophy"></i> Leaderboard</a>
+                            <a href="realtime-leaderboard.php" class="btn btn-sm btn-success"><i class="fas fa-tv"></i> Live Board</a>
+                        </div>
         <?php } ?>
 
         <?php
-        session_start();
-        
         if (isset($_SESSION['user'])) {
-            echo "<p>Welcome back, " . htmlspecialchars($_SESSION['user']) . "!</p>";
-            echo "<a href='dashboard.php'>Go to Dashboard</a> | <a href='submit.php'>🚀 Submit Flag</a> | <a href='leaderboard.php'>🏆 Leaderboard</a> | <a href='realtime-leaderboard.php'>📺 Live Board</a> | <a href='logout.php'>Logout</a>";
+            echo "<div class='alert alert-success'><i class='fas fa-user'></i> Welcome back, " . htmlspecialchars($_SESSION['user']) . "!</div>";
+            echo "<div class='d-grid gap-2 d-md-flex justify-content-md-center'>";
+            echo "<a href='dashboard.php' class='btn btn-primary'><i class='fas fa-tachometer-alt'></i> Dashboard</a>";
+            echo "<a href='submit.php' class='btn btn-success'><i class='fas fa-rocket'></i> Submit Flag</a>";
+            echo "<a href='leaderboard.php' class='btn btn-warning'><i class='fas fa-trophy'></i> Leaderboard</a>";
+            echo "<a href='realtime-leaderboard.php' class='btn btn-info'><i class='fas fa-tv'></i> Live Board</a>";
+            echo "<a href='logout.php' class='btn btn-outline-danger'><i class='fas fa-sign-out-alt'></i> Logout</a>";
+            echo "</div>";
         } else {
         ?>
         
-        <div class="login-form">
-            <h3>Employee Login</h3>
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white text-center">
+                                        <h5><i class="fas fa-lock"></i> Employee Login</h5>
+                                    </div>
+                                    <div class="card-body">
             <?php
             if (isset($_POST['login'])) {
                 $username = $_POST['username'];
@@ -80,38 +93,52 @@
                     header("Location: dashboard.php");
                     exit();
                 } else {
-                    echo "<div class='error'>Invalid credentials! Try common passwords...</div>";
+                    echo "<div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> Invalid credentials! Try common passwords...</div>";
                 }
                 
                 $conn->close();
             }
             ?>
             
-            <form method="POST">
-                <div class="form-group">
-                    <label>Username:</label>
-                    <input type="text" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label>Password:</label>
-                    <input type="password" name="password" required>
-                </div>
-                <button type="submit" name="login">Login</button>
-            </form>
+                                        <form method="POST">
+                                            <div class="mb-3">
+                                                <label class="form-label"><i class="fas fa-user"></i> Username:</label>
+                                                <input type="text" name="username" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"><i class="fas fa-key"></i> Password:</label>
+                                                <input type="password" name="password" class="form-control" required>
+                                            </div>
+                                            <div class="d-grid">
+                                                <button type="submit" name="login" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+                                            </div>
+                                        </form>
             
             <?php if ($difficulty == 'beginner'): ?>
-            <p><small>Hint: Try admin/admin123 or SQL injection: <code>admin' OR '1'='1'-- </code></small></p>
+                                        <div class="alert alert-info mt-3"><small><i class="fas fa-lightbulb"></i> Hint: Try admin/admin123 or SQL injection: <code>admin' OR '1'='1'-- </code></small></div>
             <?php elseif ($difficulty == 'intermediate'): ?>
-            <p><small>Hint: Try default credentials or SQL injection techniques</small></p>
+                                        <div class="alert alert-info mt-3"><small><i class="fas fa-lightbulb"></i> Hint: Try default credentials or SQL injection techniques</small></div>
             <?php endif; ?>
-            <p><small>Difficulty: <strong><?php echo ucfirst($difficulty); ?></strong> Mode (Set by Admin)</small></p>
-        </div>
+                                        <div class="text-center mt-3">
+                                            <small class="text-muted"><i class="fas fa-cog"></i> Difficulty: <strong><?php echo ucfirst($difficulty); ?></strong> Mode (Set by Admin)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
         
         <?php } ?>
         
-        <!-- Hidden comment for reconnaissance -->
-        <!-- TODO: Remove debug info - Database: mystery_corp, Tables: users, employees, secrets -->
-        <!-- Hidden service running on port 8081 for internal use only -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    
+    <!-- Hidden comment for reconnaissance -->
+    <!-- TODO: Remove debug info - Database: mystery_corp, Tables: users, employees, secrets -->
+    <!-- Hidden service running on port 8081 for internal use only -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

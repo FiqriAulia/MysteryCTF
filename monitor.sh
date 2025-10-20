@@ -3,24 +3,34 @@
 echo "📊 Mystery Corporation CTF - Monitoring Dashboard"
 echo "==============================================="
 
+# Check Docker Compose command
+if command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
+elif docker compose version &> /dev/null; then
+    COMPOSE_CMD="docker compose"
+else
+    echo "❌ Docker Compose not found."
+    exit 1
+fi
+
 # Function to show service status
 show_status() {
     echo "🔧 Service Status:"
-    docker-compose ps
+    $COMPOSE_CMD ps
     echo ""
 }
 
 # Function to show access logs
 show_logs() {
     echo "📋 Recent Access Logs (Last 20 entries):"
-    docker-compose logs --tail=20 web | grep -E "(GET|POST)" | tail -10
+    $COMPOSE_CMD logs --tail=20 web | grep -E "(GET|POST)" | tail -10
     echo ""
 }
 
 # Function to show database connections
 show_db_connections() {
-    echo "🗄️  Database Connections:"
-    docker-compose exec -T db mysql -u root -pmystery123 -e "SHOW PROCESSLIST;" 2>/dev/null | grep -v "Sleep" || echo "No active connections"
+    echo "🗜️  Database Connections:"
+    $COMPOSE_CMD exec -T db mysql -u root -pmystery123 -e "SHOW PROCESSLIST;" 2>/dev/null | grep -v "Sleep" || echo "No active connections"
     echo ""
 }
 
@@ -42,7 +52,7 @@ show_network_info() {
 # Function to show participant activity
 show_activity() {
     echo "👥 Participant Activity (SQL queries in logs):"
-    docker-compose logs web | grep -i "select\|union\|insert\|update\|delete" | tail -5 || echo "No SQL activity detected"
+    $COMPOSE_CMD logs web | grep -i "select\|union\|insert\|update\|delete" | tail -5 || echo "No SQL activity detected"
     echo ""
 }
 
