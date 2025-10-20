@@ -3,11 +3,11 @@
 echo "📊 Mystery Corporation CTF - Monitoring Dashboard"
 echo "==============================================="
 
-# Check Docker Compose command
-if command -v docker-compose &> /dev/null; then
-    COMPOSE_CMD="docker-compose"
-elif docker compose version &> /dev/null; then
+# Check Docker Compose command (prioritize modern version)
+if docker compose version &> /dev/null; then
     COMPOSE_CMD="docker compose"
+elif command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
 else
     echo "❌ Docker Compose not found."
     exit 1

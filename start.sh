@@ -18,11 +18,11 @@ fi
 
 echo "✅ Docker is running"
 
-# Check if Docker Compose is available (try both versions)
-if command -v docker-compose &> /dev/null; then
-    COMPOSE_CMD="docker-compose"
-elif docker compose version &> /dev/null; then
+# Check if Docker Compose is available (prioritize modern version)
+if docker compose version &> /dev/null; then
     COMPOSE_CMD="docker compose"
+elif command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
 else
     echo "❌ Docker Compose not found. Please install Docker Compose."
     exit 1

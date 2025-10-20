@@ -5,7 +5,7 @@ session_start();
 if (!isset($_SESSION['admin_logged_in'])) {
     if (isset($_POST['admin_login'])) {
         $admin_pass = $_POST['admin_password'];
-        if ($admin_pass === $_ENV['ADMIN_PASSWORD']) {
+        if ($admin_pass === (getenv('ADMIN_PASSWORD') ?: 'ctf_admin_2024')) {
             $_SESSION['admin_logged_in'] = true;
         } else {
             $error = "Invalid admin password!";
@@ -43,7 +43,12 @@ if (!isset($_SESSION['admin_logged_in'])) {
     }
 }
 
-$conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
+$conn = new mysqli(
+    getenv('DB_HOST') ?: 'db',
+    getenv('DB_USER') ?: 'root',
+    getenv('DB_PASS') ?: 'mystery123',
+    getenv('DB_NAME') ?: 'mystery_corp'
+);
 ?>
 
 <!DOCTYPE html>

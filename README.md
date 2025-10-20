@@ -157,17 +157,17 @@ Setelah menyelesaikan CTF ini, Anda akan memahami:
 
 ### Container Issues
 ```bash
-# Restart containers (use docker-compose or docker compose)
-docker-compose down  # or: docker compose down
-docker-compose up -d # or: docker compose up -d
+# Restart containers (use docker compose or docker-compose)
+docker compose down  # or: docker-compose down
+docker compose up -d # or: docker-compose up -d
 
 # Check logs
-docker-compose logs -f web  # or: docker compose logs -f web
-docker-compose logs -f db   # or: docker compose logs -f db
+docker compose logs -f web  # or: docker-compose logs -f web
+docker compose logs -f db   # or: docker-compose logs -f db
 
 # Reset database
-docker-compose down -v  # or: docker compose down -v
-docker-compose up -d    # or: docker compose up -d
+docker compose down -v  # or: docker-compose down -v
+docker compose up -d    # or: docker-compose up -d
 ```
 
 ### Network Access Issues
@@ -193,10 +193,10 @@ sudo iptables -L
 ./monitor.sh
 
 # Check access logs
-docker-compose logs web | grep -E "(GET|POST)"  # or: docker compose logs web
+docker compose logs web | grep -E "(GET|POST)"  # or: docker-compose logs web
 
 # Monitor database activity
-docker-compose exec db mysql -u root -pmystery123 -e "SHOW PROCESSLIST;"  # or: docker compose exec
+docker compose exec db mysql -u root -pmystery123 -e "SHOW PROCESSLIST;"  # or: docker-compose exec
 ```
 
 ### Database Connection Issues
