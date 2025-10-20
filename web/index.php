@@ -20,6 +20,10 @@ if (isset($_POST['login'])) {
     
     // VULNERABLE: Direct string concatenation - SQL Injection possible
     $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+    
+    // Debug: Show query (remove in production)
+    error_log("SQL Query: " . $query);
+    
     $result = $conn->query($query);
     
     if ($result && $result->num_rows > 0) {

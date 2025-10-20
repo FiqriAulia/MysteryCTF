@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Handle logout first (before any output)
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
 // Simple admin authentication
 if (!isset($_SESSION['admin_logged_in'])) {
     if (isset($_POST['admin_login'])) {
@@ -49,6 +56,14 @@ $conn = new mysqli(
     getenv('DB_PASS') ?: 'mystery123',
     getenv('DB_NAME') ?: 'mystery_corp'
 );
+
+if ($conn->connect_error) {
+    die("<div style='background: #e74c3c; color: white; padding: 20px; margin: 20px; border-radius: 8px;'>
+         <h2>❌ Database Connection Failed</h2>
+         <p>Error: " . $conn->connect_error . "</p>
+         <p>Please check if the database container is running and restart with: <code>sudo docker compose restart</code></p>
+         </div>");
+}
 ?>
 
 <!DOCTYPE html>
@@ -93,13 +108,6 @@ $conn = new mysqli(
         </div>
 
         <?php
-        // Handle logout
-        if (isset($_GET['logout'])) {
-            session_destroy();
-            header("Location: admin_dashboard.php");
-            exit();
-        }
-
         // Handle admin actions
         if (isset($_POST['reset_team'])) {
             $team_name = $_POST['team_name'];
