@@ -1,6 +1,40 @@
 <?php
 session_start();
 
+// Handle login processing first (before any output)
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+    // Vulnerable SQL query - intentional for CTF
+    $conn = new mysqli(
+        getenv('DB_HOST') ?: 'db',
+        getenv('DB_USER') ?: 'root',
+        getenv('DB_PASS') ?: 'mystery123', 
+        getenv('DB_NAME') ?: 'mystery_corp'
+    );
+    
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    
+    // VULNERABLE: Direct string concatenation - SQL Injection possible
+    $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+    $result = $conn->query($query);
+    
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $_SESSION['user'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        $login_error = "Invalid credentials! Try common passwords...";
+    }
+    
+    $conn->close();
+}
+
 // Show hints based on global difficulty level set by admin
 $difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficulty_setting.txt') : 'beginner';
 ?>
@@ -70,40 +104,9 @@ $difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficu
                                         <h5><i class="fas fa-lock"></i> Employee Login</h5>
                                     </div>
                                     <div class="card-body">
-            <?php
-            if (isset($_POST['login'])) {
-                $username = $_POST['username'];
-                $password = $_POST['password'];
-                
-                // Vulnerable SQL query - intentional for CTF
-                $conn = new mysqli(
-                    getenv('DB_HOST') ?: 'db',
-                    getenv('DB_USER') ?: 'root',
-                    getenv('DB_PASS') ?: 'mystery123', 
-                    getenv('DB_NAME') ?: 'mystery_corp'
-                );
-                
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-                
-                // VULNERABLE: Direct string concatenation - SQL Injection possible
-                $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-                $result = $conn->query($query);
-                
-                if ($result && $result->num_rows > 0) {
-                    $user = $result->fetch_assoc();
-                    $_SESSION['user'] = $user['username'];
-                    $_SESSION['role'] = $user['role'];
-                    header("Location: dashboard.php");
-                    exit();
-                } else {
-                    echo "<div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> Invalid credentials! Try common passwords...</div>";
-                }
-                
-                $conn->close();
-            }
-            ?>
+                                        <?php if (isset($login_error)): ?>
+                                        <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <?php echo $login_error; ?></div>
+                                        <?php endif; ?>
             
                                         <form method="POST">
                                             <div class="mb-3">

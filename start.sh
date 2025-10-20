@@ -18,36 +18,26 @@ fi
 
 echo "✅ Docker is running"
 
-# Check if Docker Compose is available (prioritize modern version)
-if docker compose version &> /dev/null; then
-    COMPOSE_CMD="docker compose"
-elif command -v docker-compose &> /dev/null; then
-    COMPOSE_CMD="docker-compose"
-else
-    echo "❌ Docker Compose not found. Please install Docker Compose."
-    exit 1
-fi
-
-echo "📦 Using: $COMPOSE_CMD"
+echo "📦 Using: sudo docker compose"
 
 echo "🔧 Starting Mystery Corporation CTF..."
 
 # Stop any existing containers
-$COMPOSE_CMD down > /dev/null 2>&1
+sudo docker compose down > /dev/null 2>&1
 
 # Build and start containers
 echo "📦 Building containers..."
-$COMPOSE_CMD build --no-cache
+sudo docker compose build --no-cache
 
 echo "🚀 Starting services..."
-$COMPOSE_CMD up -d
+sudo docker compose up -d
 
 # Wait for services to be ready
 echo "⏳ Waiting for services to start..."
 sleep 10
 
 # Check if services are running
-if $COMPOSE_CMD ps | grep -q "Up"; then
+if sudo docker compose ps | grep -q "Up"; then
     echo "✅ Services are running!"
     echo ""
     echo "🌐 Access the CTF at:"
@@ -75,5 +65,5 @@ if $COMPOSE_CMD ps | grep -q "Up"; then
     echo "Good luck, Detective! 🕵️‍♂️"
 else
     echo "❌ Failed to start services. Check logs with:"
-    echo "   $COMPOSE_CMD logs"
+    echo "   sudo docker compose logs"
 fi

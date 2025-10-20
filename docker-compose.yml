@@ -7,11 +7,8 @@ services:
       - "0.0.0.0:8080:80"
     depends_on:
       - db
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
+    env_file:
+      - .env
     volumes:
       - ./web:/var/www/html
 

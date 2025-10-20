@@ -8,6 +8,7 @@ if [ ! -f .env ]; then
     echo "📝 Creating .env file from template..."
     cp .env.example .env
     echo "✅ .env file created! You can customize flags and passwords in .env"
+    echo "⚠️  Please restart containers after modifying .env: sudo docker compose restart"
 else
     echo "✅ .env file already exists"
 fi
