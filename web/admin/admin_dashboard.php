@@ -295,12 +295,18 @@ $conn = new mysqli(
             // Handle difficulty change
             if (isset($_POST['set_global_difficulty'])) {
                 $global_difficulty = $_POST['global_difficulty'];
-                // Store in a simple file or database
-                file_put_contents('../difficulty_setting.txt', $global_difficulty);
+                // Store in database instead of file
+                $conn->query("CREATE TABLE IF NOT EXISTS ctf_settings (setting_key VARCHAR(50) PRIMARY KEY, setting_value TEXT)");
+                $stmt = $conn->prepare("INSERT INTO ctf_settings (setting_key, setting_value) VALUES ('difficulty', ?) ON DUPLICATE KEY UPDATE setting_value = ?");
+                $stmt->bind_param("ss", $global_difficulty, $global_difficulty);
+                $stmt->execute();
                 echo "<div class='alert'>✅ Difficulty set to: " . ucfirst($global_difficulty) . "</div>";
             }
             
-            $current_difficulty = file_exists('../difficulty_setting.txt') ? file_get_contents('../difficulty_setting.txt') : 'beginner';
+            // Get current difficulty from database
+            $conn->query("CREATE TABLE IF NOT EXISTS ctf_settings (setting_key VARCHAR(50) PRIMARY KEY, setting_value TEXT)");
+            $result = $conn->query("SELECT setting_value FROM ctf_settings WHERE setting_key = 'difficulty'");
+            $current_difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'beginner';
             ?>
             <form method="POST">
                 <label>Global Difficulty Level:</label><br>

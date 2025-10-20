@@ -13,7 +13,14 @@ $conn = new mysqli(
     getenv('DB_NAME') ?: 'mystery_corp'
 );
 
-$difficulty = file_exists('difficulty_setting.txt') ? file_get_contents('difficulty_setting.txt') : 'beginner';
+// Get difficulty from database
+if (!$conn->connect_error) {
+    $conn->query("CREATE TABLE IF NOT EXISTS ctf_settings (setting_key VARCHAR(50) PRIMARY KEY, setting_value TEXT)");
+    $result = $conn->query("SELECT setting_value FROM ctf_settings WHERE setting_key = 'difficulty'");
+    $difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'beginner';
+} else {
+    $difficulty = 'beginner';
+}
 ?>
 <!DOCTYPE html>
 <html>

@@ -3,15 +3,34 @@
 echo "🕵️  Mystery Corporation CTF Setup"
 echo "=================================="
 
-# Check if Docker is running
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+    echo "❌ Docker is not installed. Please install Docker first."
+    exit 1
+fi
+
+# Check if Docker daemon is running
+echo "🔍 Checking Docker status..."
 if ! docker info > /dev/null 2>&1; then
-    echo "⚠️  Docker not detected. Trying to start Docker service..."
-    sudo systemctl start docker 2>/dev/null || true
-    sleep 2
+    echo "⚠️  Docker daemon not running. Attempting to start..."
+    
+    # Try different methods to start Docker
+    if command -v systemctl &> /dev/null; then
+        echo "   Trying: sudo systemctl start docker"
+        sudo systemctl start docker 2>/dev/null || true
+    elif command -v service &> /dev/null; then
+        echo "   Trying: sudo service docker start"
+        sudo service docker start 2>/dev/null || true
+    fi
+    
+    sleep 3
+    
+    # Check again
     if ! docker info > /dev/null 2>&1; then
-        echo "❌ Docker is not running. Please start Docker manually:"
-        echo "   sudo systemctl start docker"
-        echo "   or open Docker Desktop"
+        echo "❌ Docker daemon is not running. Please start Docker manually:"
+        echo "   Linux: sudo systemctl start docker"
+        echo "   macOS/Windows: Open Docker Desktop application"
+        echo "   Then run this script again"
         exit 1
     fi
 fi
