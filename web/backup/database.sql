@@ -1,40 +1,58 @@
 -- Mystery Corporation Database Backup
 -- Generated: 2024-01-15 10:30:00
--- WARNING: This backup contains sensitive information
-
--- Admin credentials (for emergency access)
--- Username: admin
--- Password: admin123
--- 
--- Database connection details:
--- Host: db
--- Username: root  
--- Password: mystery123
 -- Database: mystery_corp
-
--- FLAG for finding backup files
+-- 
+-- WARNING: This backup contains sensitive information!
 -- FLAG{backup_files_exposed_g0bust3r}
+--
 
--- Emergency SQL commands:
--- SELECT * FROM users WHERE role = 'admin';
--- SELECT * FROM secrets WHERE access_level = 3;
--- 
--- Vulnerable endpoints discovered:
--- /dashboard.php?search=' UNION SELECT 1,username,password,role,5 FROM users--
--- 
--- XSS payload locations:
--- Employee notes field in database
--- Search functionality without proper sanitization
+CREATE DATABASE IF NOT EXISTS mystery_corp;
+USE mystery_corp;
 
-CREATE TABLE IF NOT EXISTS emergency_access (
-    id INT PRIMARY KEY,
-    access_code VARCHAR(100),
-    description TEXT
+-- Users table backup
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO emergency_access VALUES 
-(1, 'EMERGENCY_ADMIN_2024', 'Emergency admin access code'),
-(2, 'BACKUP_RESTORE_KEY', 'Database restoration key'),
-(3, 'FLAG{emergency_backup_access}', 'Emergency flag for backup discovery');
+INSERT INTO users (username, password, role) VALUES 
+('guest', 'guest', 'user'),
+('detective', 'sherlock', 'investigator'),
+('admin', 'admin123', 'admin');
 
--- End of backup file
+-- Employees table backup
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    secret_note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO employees (name, department, salary, secret_note) VALUES 
+('John Smith', 'IT', 75000.00, 'Nothing suspicious here'),
+('Jane Doe', 'HR', 65000.00, 'Check network traffic logs for admin activities'),
+('Bob Wilson', 'Finance', 80000.00, 'Check the hidden service on port 8081'),
+('Alice Brown', 'Security', 90000.00, 'XSS payload found in notes');
+
+-- Company secrets backup
+CREATE TABLE secrets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100),
+    content TEXT,
+    access_level INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO secrets (title, content, access_level) VALUES 
+('Company Policy', 'Standard company policies and procedures', 1),
+('Financial Reports', 'Q3 financial data and projections', 2),
+('Top Secret Project', 'Classified project details - Admin panel required', 3),
+('Emergency Contacts', 'Contact information for emergencies', 1);
+
+-- End of backup
+-- Remember to secure this file!

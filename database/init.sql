@@ -34,10 +34,36 @@ INSERT INTO users (username, password, role) VALUES
 
 -- Flag 2: Hidden in employee data  
 INSERT INTO employees (name, department, salary, secret_note) VALUES 
-('John Smith', 'IT', 75000.00, 'Nothing suspicious here'),
-('Jane Doe', 'HR', 65000.00, 'Check network traffic logs for admin activities'),
-('Bob Wilson', 'Finance', 80000.00, 'Check the hidden service on port 8081'),
-('Alice Brown', 'Security', 90000.00, 'XSS payload: <script>alert("FLAG{xss_found_h3r3}")</script>');
+('John Smith', 'IT', 75000.00, 'Working on server maintenance this week'),
+('Jane Doe', 'HR', 65000.00, 'Remember to check robots.txt for web crawler policies'),
+('Bob Wilson', 'Finance', 80000.00, 'Quarterly reports due next Friday'),
+('Alice Brown', 'Security', 90000.00, 'Security audit scheduled for next week'),
+('Mike Johnson', 'IT', 82000.00, 'Network monitoring logs stored in /network-logs/ directory'),
+('Sarah Davis', 'Marketing', 68000.00, 'New campaign launch scheduled for next month'),
+('Tom Wilson', 'DevOps', 95000.00, 'Docker containers running on non-standard ports'),
+('Lisa Chen', 'Security', 88000.00, 'Backup files should be secured properly'),
+('David Brown', 'IT', 79000.00, 'Database maintenance completed successfully'),
+('Emma Taylor', 'HR', 71000.00, 'Employee onboarding process updated'),
+('James Miller', 'Finance', 73000.00, 'Budget planning for Q2 in progress'),
+('Maria Garcia', 'Marketing', 69000.00, 'Social media strategy review completed'),
+('Robert Johnson', 'IT', 81000.00, 'Server migration project on track'),
+('Jennifer Lee', 'HR', 67000.00, 'Performance reviews scheduled this month'),
+('Michael Davis', 'DevOps', 92000.00, 'CI/CD pipeline optimization in progress'),
+('Ashley Wilson', 'Marketing', 70000.00, 'Brand guidelines update completed'),
+('Christopher Brown', 'Finance', 76000.00, 'Financial forecasting models updated'),
+('Amanda Jones', 'Security', 89000.00, 'Penetration testing results under review'),
+('Daniel Garcia', 'IT', 78000.00, 'Network infrastructure upgrade planned'),
+('Jessica Miller', 'HR', 72000.00, 'Training program development ongoing'),
+('Matthew Taylor', 'DevOps', 94000.00, 'Kubernetes cluster deployment successful'),
+('Lauren Davis', 'Marketing', 71000.00, 'Customer engagement metrics analysis'),
+('Ryan Anderson', 'Security', 91000.00, 'XSS payload: <script>alert("FLAG{xss_found_h3r3}")</script>'),
+('Stephanie Wilson', 'Finance', 74000.00, 'Expense reporting system upgrade'),
+('Kevin Brown', 'IT', 80000.00, 'Backup system verification completed'),
+('Nicole Johnson', 'HR', 68000.00, 'Employee satisfaction survey results'),
+('Brandon Lee', 'DevOps', 93000.00, 'Monitoring dashboard improvements'),
+('Samantha Garcia', 'Marketing', 69500.00, 'Content strategy roadmap finalized'),
+('Justin Miller', 'Security', 87000.00, 'Security policy documentation update'),
+('Rachel Taylor', 'Finance', 75500.00, 'Audit preparation documentation ready');
 
 -- Flag 3: In secrets table (requires admin access)
 INSERT INTO secrets (title, content, access_level) VALUES 

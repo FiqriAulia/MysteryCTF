@@ -5,11 +5,12 @@ Disallow: /config/
 Disallow: /debug.php
 Disallow: /logs/
 Disallow: /network-logs/
+Disallow: /temp/
+Disallow: /cache/
 
-# Hidden directories for gobuster discovery
-# /admin/ - Administrative panel
-# /backup/ - Backup files
-# /config/ - Configuration files
-# /uploads/ - File uploads
-# /api/ - API endpoints
-# /network-logs/ - Network traffic analysis (pcap files)
+# Security notice: Sensitive directories restricted
+# Contact IT department for access to monitoring systems
+# Network forensics data available for authorized personnel
+# Backup retention policy: 30 days
+# 
+# Last updated: 2024-01-15 by IT Security Team

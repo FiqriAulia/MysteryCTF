@@ -29,7 +29,27 @@ gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirb/common.txt
 # Common directories to find:
 # /admin/ (403 Forbidden - requires authentication)
 # /backup/ (200 OK - contains database.sql)
+# /network-logs/ (200 OK - contains pcap files)
 # /robots.txt (200 OK - contains hints)
+```
+
+#### 1.4 Network Traffic Analysis
+```bash
+# Discover network-logs directory from gobuster or robots.txt
+curl http://localhost:8080/network-logs/
+
+# Download pcap file for analysis
+wget http://localhost:8080/network-logs/admin_traffic.pcap
+
+# Analyze with Wireshark
+wireshark admin_traffic.pcap
+
+# Or use command line tools
+strings admin_traffic.pcap | grep -E "(GET|POST)"
+tcpdump -r admin_traffic.pcap -A | grep -E "(admin|secrets|vault)"
+
+# Check network analysis logs
+curl http://localhost:8080/network-logs/network_analysis.log
 ```
 
 #### 1.3 Information Gathering
@@ -44,6 +64,11 @@ curl http://localhost:8080/ | grep -i "<!--"
 **Flags Found:**
 - `FLAG{hidden_service_discovered_8081}` - Akses http://localhost:8081
 - `FLAG{backup_files_exposed_g0bust3r}` - Baca /backup/database.sql
+
+**Network Analysis Results:**
+- Admin panel URLs discovered: `/admin/secrets.php`, `/admin/vault.php`
+- Session information: `PHPSESSID=admin_session`
+- HTTP requests to sensitive endpoints logged
 
 ### Phase 2: SQL Injection 💉
 
@@ -149,12 +174,28 @@ Search: Alice
 **Flags Found:**
 - `FLAG{xss_found_h3r3}` - Temukan XSS di employee notes
 
-### Phase 4: Privilege Escalation & Admin Access 🔐
+### Phase 4: Network Forensics & Admin Discovery 🔍
 
-#### 4.1 Admin Panel Access
-Setelah login sebagai admin, akses:
+#### 4.1 Network Traffic Analysis
+```bash
+# Analyze captured network traffic
+strings admin_traffic.pcap | grep "GET /admin"
+
+# Expected findings:
+# GET /admin/secrets.php HTTP/1.1
+# GET /admin/vault.php HTTP/1.1
+
+# Check network logs for admin activities
+grep "admin" network_analysis.log
+```
+
+#### 4.2 Admin Panel Discovery
+Berdasarkan analisis network traffic, temukan admin panel URLs:
 - `/admin/secrets.php` - Company secrets
 - `/admin/vault.php` - Security vault
+
+#### 4.3 Admin Panel Access
+Setelah login sebagai admin dan menemukan URLs dari network analysis:
 
 #### 4.2 Database Manipulation
 ```sql
@@ -217,6 +258,11 @@ gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirbuster/director
 # Manual enumeration
 curl http://localhost:8080/robots.txt
 curl http://localhost:8080/backup/database.sql
+
+# Network traffic analysis
+wget http://localhost:8080/network-logs/admin_traffic.pcap
+strings admin_traffic.pcap | grep -i admin
+curl http://localhost:8080/network-logs/network_analysis.log
 ```
 
 ### SQL Injection
