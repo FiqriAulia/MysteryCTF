@@ -24,7 +24,7 @@
             <h3>🕵️ Discovery Bonus!</h3>
             <p>You found the hidden service mentioned in the employee database!</p>
             <p><strong>Reconnaissance Flag:</strong></p>
-            <code>FLAG{hidden_service_discovered_8081}</code>
+            <code><?php echo getenv('FLAG_1') ?: 'FLAG{hidden_service_discovered_8081}'; ?></code>
         </div>
 
         <h3>📊 System Information</h3>

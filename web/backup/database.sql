@@ -3,7 +3,7 @@
 -- Database: mystery_corp
 -- 
 -- WARNING: This backup contains sensitive information!
--- FLAG{backup_files_exposed_g0bust3r}
+-- <?php echo getenv('FLAG_2') ?: 'FLAG{backup_files_exposed_g0bust3r}'; ?>
 --
 
 CREATE DATABASE IF NOT EXISTS mystery_corp;
