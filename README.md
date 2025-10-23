@@ -1,22 +1,20 @@
 # 🕵️ Mystery Corporation CTF
 
-Selamat datang di **Mystery Corporation CTF** - sebuah challenge penetration testing yang menggabungkan berbagai teknik hacking dalam satu skenario misteri yang menarik!
+**A comprehensive Capture The Flag challenge focused on web application security, digital forensics, and penetration testing.**
 
-## 🎯 Objective
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://docker.com)
+[![Difficulty](https://img.shields.io/badge/Difficulty-Advanced-red)](#)
+[![Flags](https://img.shields.io/badge/Flags-6-green)](#)
+[![Points](https://img.shields.io/badge/Points-1200-yellow)](#)
 
-Anda adalah seorang detective yang menyelidiki aktivitas mencurigakan di Mystery Corporation. Temukan semua flag yang tersembunyi dengan menggunakan berbagai teknik penetration testing.
+## 🎯 Challenge Overview
 
-## 🚀 Setup & Installation
+**Scenario:** You are a Digital Forensics Investigator tasked with investigating a security incident at Mystery Corporation. Recent suspicious activities include unauthorized admin access, database anomalies, and network traffic to unknown services.
 
-### Prerequisites
-- Docker & Docker Compose
-- Nmap
-- Gobuster
-- Burp Suite atau tools web security lainnya
+**Mission:** Uncover the full scope of the security breach, collect digital evidence, and document all findings using proper forensic methodology.
 
-### Menjalankan CTF
+## 🚀 Quick Start
 
-#### Quick Start (GitHub)
 ```bash
 # Clone repository
 git clone https://github.com/FiqriAulia/MysteryCTF.git
@@ -25,220 +23,140 @@ cd MysteryCTF
 # Setup environment
 ./setup.sh
 
-# Start CTF
+# Start CTF (Advanced mode - no hints)
 ./start.sh
+
+# Access CTF at http://localhost:8080
 ```
 
-#### Single User (Local)
-1. Clone repository dan masuk ke direktori
-2. Jalankan setup: `./setup.sh`
-3. Start CTF: `./start.sh`
-4. Akses aplikasi di: `http://localhost:8080`
+## 🏁 Flags & Challenges
 
-#### Multi-User (Network Access)
-1. Untuk CTF yang dapat diakses dari laptop lain:
-   ```bash
-   ./start-network.sh
-   ```
+| Flag | Challenge | Type | Difficulty | Points |
+|------|-----------|------|------------|--------|
+| `FLAG{hidden_service_discovered_8081}` | Service Discovery | Reconnaissance | Easy | 100 |
+| `FLAG{backup_files_exposed_g0bust3r}` | Directory Enumeration | OSINT | Easy | 150 |
+| `FLAG{sql_injection_master_b4d1c0d3}` | Authentication Bypass | Web App | Medium | 200 |
+| `FLAG{xss_found_h3r3}` | XSS Discovery | Web App | Medium | 200 |
+| `FLAG{admin_access_s3cr3t_pr0j3ct}` | Privilege Escalation | Forensics | Hard | 250 |
+| `FLAG{vault_master_mystery_solved_c0mpl3t3}` | Final Challenge | Advanced | Hard | 300 |
 
-2. Script akan menampilkan IP address dan port yang dapat diakses peserta
-3. Bagikan informasi target kepada peserta CTF
-4. Berikan file `PARTICIPANT-GUIDE.md` kepada peserta
+**Total: 1200 Points**
 
-### Verifikasi Setup
-```bash
-# Check running containers
-docker-compose ps
-
-# Check logs if needed
-docker-compose logs web
-docker-compose logs db
-```
-
-## 🎮 How to Play
-
-### 1. 🔍 Reconnaissance Phase
-Mulai dengan reconnaissance untuk memahami target:
-
-```bash
-# Scan ports dengan nmap
-nmap -p- localhost
-
-# Directory enumeration dengan gobuster
-gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirb/common.txt
-
-# Check robots.txt
-curl http://localhost:8080/robots.txt
-```
-
-### 2. 💉 SQL Injection
-- Login form vulnerable terhadap SQL injection
-- Search functionality juga vulnerable
-- Coba berbagai payload SQL injection
-
-**Hints:**
-- Username: `admin` Password: `admin123` (basic login)
-- SQL Injection payload: `admin' OR '1'='1'-- `
-- Union-based injection di search: `' UNION SELECT 1,2,3,4,5-- `
-
-### 3. 🚨 Cross-Site Scripting (XSS)
-- Employee notes field tidak di-sanitize
-- Cari XSS payload di database
-
-### 4. 🔐 Privilege Escalation
-- Dapatkan akses admin
-- Explore admin panel
-- Akses company secrets
-
-### 5. 🏆 Final Challenge
-- Temukan security vault
-- Collect semua flags
-
-## 🏁 Flags to Collect
-
-Terdapat beberapa flag yang harus dikumpulkan:
-
-1. **FLAG{sql_injection_master_b4d1c0d3}** - SQL Injection mastery
-2. **FLAG{xss_found_h3r3}** - XSS discovery
-3. **FLAG{admin_access_s3cr3t_pr0j3ct}** - Admin panel access
-4. **FLAG{hidden_service_discovered_8081}** - Hidden service discovery
-5. **FLAG{backup_files_exposed_g0bust3r}** - Backup file discovery
-6. **FLAG{vault_master_mystery_solved_c0mpl3t3}** - Final vault access
-
-## 🛠️ Tools Recommended
+## 🛠️ Investigation Toolkit
 
 ### Reconnaissance
-- **Nmap**: Port scanning
-- **Gobuster**: Directory enumeration
-- **Nikto**: Web vulnerability scanner
+- **nmap** - Network and port scanning
+- **gobuster** - Directory/file enumeration  
+- **robots.txt** - Information disclosure
 
-### Manual Testing (Recommended)
-- **Browser Developer Tools**: Built-in F12 tools
-- **Curl**: HTTP requests dan cookie management
-- **Manual payload testing**: Understanding fundamentals
+### Web Application Security
+- **SQL Injection** - Systematic database enumeration
+- **XSS Discovery** - Cross-site scripting identification
+- **Authentication Bypass** - Privilege escalation techniques
 
-### Advanced Tools (Optional)
-- **Burp Suite**: GUI web application testing
-- **OWASP ZAP**: Free alternative to Burp Suite
-- **SQLmap**: Automated SQL injection (for learning comparison)
+### Digital Forensics
+- **Wireshark** - Network packet analysis
+- **Log Analysis** - System and application logs
+- **Timeline Reconstruction** - Evidence correlation
 
-## 📚 Learning Objectives
+## 🎮 Difficulty Modes
 
-Setelah menyelesaikan CTF ini, Anda akan memahami:
+- **🔴 Advanced** (Default): No hints - realistic penetration testing experience
+- **🟡 Intermediate**: Limited guidance for key challenges
+- **🟢 Beginner**: Full hints and step-by-step instructions
 
-1. **Reconnaissance Techniques**
-   - Port scanning dengan nmap
-   - Directory enumeration dengan gobuster
-   - Information gathering
+*Change difficulty via admin panel: `/admin/admin_dashboard.php`*
 
-2. **SQL Injection**
-   - Authentication bypass
-   - Union-based injection
-   - Database enumeration
-   - Data extraction
+## 📊 Features
 
-3. **Cross-Site Scripting (XSS)**
-   - Stored XSS
-   - Payload crafting
-   - Impact assessment
+✅ **Real-time Leaderboard** - Live team rankings and scoring  
+✅ **Multi-user Support** - Team-based competition ready  
+✅ **Admin Dashboard** - Comprehensive monitoring and control  
+✅ **Docker Containerized** - Easy deployment and isolation  
+✅ **Forensic Realism** - Authentic investigation scenarios  
+✅ **Progressive Difficulty** - Escalating challenge complexity  
 
-4. **Web Application Security**
-   - Input validation issues
-   - Authentication flaws
-   - Authorization bypass
-   - Information disclosure
+## 🔧 Management Commands
 
-5. **Methodology**
-   - Systematic approach to penetration testing
-   - Documentation and reporting
-   - Chain exploitation techniques
-
-## 🔧 Troubleshooting
-
-### Container Issues
 ```bash
-# Restart containers (use docker compose or docker-compose)
-docker compose down  # or: docker-compose down
-docker compose up -d # or: docker-compose up -d
+# Container Management
+./start.sh              # Start CTF (local)
+./start-network.sh      # Start CTF (network)
+docker compose down     # Stop CTF
 
-# Check logs
-docker compose logs -f web  # or: docker-compose logs -f web
-docker compose logs -f db   # or: docker-compose logs -f db
+# Database Operations
+./scripts/reset-db.sh   # Reset database and progress
+./scripts/restart.sh    # Restart all containers
 
-# Reset database
-docker compose down -v  # or: docker-compose down -v
-docker compose up -d    # or: docker-compose up -d
+# Monitoring & Testing
+./scripts/monitor.sh    # Resource monitoring
+php scripts/test-db.php # Database connectivity test
 ```
 
-### Network Access Issues
-```bash
-# Check if ports are open
-nmap -p 8080,8081,3306 [HOST_IP]
+## 📚 Documentation
 
-# Test connectivity from participant machine
-telnet [HOST_IP] 8080
-curl http://[HOST_IP]:8080
+| Document | Description |
+|----------|-------------|
+| **[📖 Story Background](docs/STORY.md)** | Investigation scenario and mission briefing |
+| **[🔍 Solution Guide](docs/SOLUTION.md)** | Complete step-by-step walkthrough |
+| **[🚀 Deployment Guide](docs/DEPLOYMENT.md)** | Production setup and configuration |
+| **[⚙️ Setup Guide](docs/CTF-SETUP-GUIDE.md)** | Detailed technical configuration |
 
-# Check firewall (macOS)
-sudo pfctl -sr | grep 8080
+## 🎓 Learning Objectives
 
-# Check firewall (Linux)
-sudo ufw status
-sudo iptables -L
+### Technical Skills Development
+- **Web Application Penetration Testing**
+- **SQL Injection Techniques & Prevention**
+- **Cross-Site Scripting (XSS) Identification**
+- **Network Traffic Analysis & Forensics**
+- **Digital Evidence Collection & Analysis**
+- **Privilege Escalation Methodologies**
+
+### Professional Methodology
+- **Systematic Reconnaissance Approach**
+- **Evidence Documentation & Chain of Custody**
+- **Timeline Reconstruction Techniques**
+- **Technical Report Writing**
+- **Ethical Hacking Principles**
+
+## 🏗️ Architecture
+
+```
+MysteryCTF/
+├── 🌐 Web Application (PHP/MySQL)
+├── 🗄️ Database (MySQL 8.0)
+├── 🔍 Hidden Services (Port 8081)
+├── 📦 Network Logs & PCAP Files
+├── 🛡️ Admin Panel & Monitoring
+└── 📊 Real-time Scoring System
 ```
 
-### Monitoring Participants
-```bash
-# Real-time monitoring
-./monitor.sh
+## ⚠️ Important Disclaimers
 
-# Check access logs
-docker compose logs web | grep -E "(GET|POST)"  # or: docker-compose logs web
-
-# Monitor database activity
-docker compose exec db mysql -u root -pmystery123 -e "SHOW PROCESSLIST;"  # or: docker-compose exec
-```
-
-### Database Connection Issues
-```bash
-# Check if database is ready
-docker-compose exec db mysql -u root -pmystery123 -e "SHOW DATABASES;"
-```
-
-### Port Conflicts
-Jika port 8080 atau 3306 sudah digunakan, edit `docker-compose.yml`:
-```yaml
-ports:
-  - "8081:80"  # Change from 8080:80
-```
-
-## 🎓 Difficulty Levels
-
-- **Beginner**: Ikuti hints yang diberikan
-- **Intermediate**: Minimal hints, fokus pada methodology
-- **Advanced**: No hints, pure black-box testing
+- **🎓 Educational Purpose**: Designed for cybersecurity learning and training
+- **🔒 Authorized Testing Only**: Never use these techniques without explicit permission
+- **🏠 Isolated Environment**: Deploy in dedicated lab/testing networks only
+- **💻 System Requirements**: Minimum 4GB RAM, 10GB disk space
+- **🔐 Security**: Change default passwords before production deployment
 
 ## 🤝 Contributing
 
-Jika Anda menemukan bug atau ingin menambah challenge:
-1. Fork repository
-2. Buat branch baru
-3. Submit pull request
+We welcome contributions! Areas for improvement:
+- 🆕 Additional challenges and flags
+- 📝 Documentation enhancements
+- 🐛 Bug fixes and performance improvements
+- 🎯 New difficulty levels and scenarios
 
-## ⚠️ Disclaimer
+Please submit pull requests with detailed descriptions.
 
-CTF ini dibuat untuk tujuan edukasi dan pembelajaran cybersecurity. Jangan gunakan teknik yang dipelajari untuk aktivitas ilegal. Selalu dapatkan izin sebelum melakukan penetration testing pada sistem yang bukan milik Anda.
+## 📄 License
 
-## 📞 Support
-
-Jika mengalami kesulitan:
-1. Baca dokumentasi dengan teliti
-2. Check troubleshooting section
-3. Gunakan hints yang tersedia di aplikasi
-4. Practice makes perfect!
+MIT License - See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Happy Hacking! 🕵️‍♂️🔍**
+## 🚀 Ready to Investigate?
 
-*Remember: The best hackers are those who think like detectives - methodical, persistent, and always curious!*
+**"Every packet tells a story. Every log entry holds a clue. Welcome to Mystery Corporation - where digital forensics meets hands-on learning."**
+
+**Start your investigation now and uncover the truth! 🕵️♂️**

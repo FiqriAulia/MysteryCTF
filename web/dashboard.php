@@ -17,7 +17,7 @@ $conn = new mysqli(
 if (!$conn->connect_error) {
     $conn->query("CREATE TABLE IF NOT EXISTS ctf_settings (setting_key VARCHAR(50) PRIMARY KEY, setting_value TEXT)");
     $result = $conn->query("SELECT setting_value FROM ctf_settings WHERE setting_key = 'difficulty'");
-    $difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'beginner';
+    $difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'advanced';
 } else {
     $difficulty = 'beginner';
 }
@@ -55,12 +55,7 @@ if (!$conn->connect_error) {
                     <div class="card-body">
                         
                         <?php if ($_SESSION['role'] == 'admin'): ?>
-                        <div class="alert alert-success border-start border-4 border-success">
-                            <h5><i class="fas fa-check-circle"></i> FLAG FOUND!</h5>
-                            <p>You've gained admin access!</p>
-                            <code class="fs-5">FLAG{sql_injection_master_b4d1c0d3}</code><br>
-                            <small class="text-muted">Next clue: Check the employee records for suspicious entries...</small>
-                        </div>
+                        <!-- Admin access granted - investigate further for company secrets -->
                         <?php endif; ?>
 
                         <!-- Employee Search -->

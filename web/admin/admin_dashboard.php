@@ -314,7 +314,7 @@ if ($conn->connect_error) {
             // Get current difficulty from database
             $conn->query("CREATE TABLE IF NOT EXISTS ctf_settings (setting_key VARCHAR(50) PRIMARY KEY, setting_value TEXT)");
             $result = $conn->query("SELECT setting_value FROM ctf_settings WHERE setting_key = 'difficulty'");
-            $current_difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'beginner';
+            $current_difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'advanced';
             ?>
             <form method="POST">
                 <label>Global Difficulty Level:</label><br>
