@@ -40,7 +40,7 @@ INSERT INTO employees (name, department, salary, secret_note) VALUES
 ('Jane Doe', 'HR', 65000.00, 'Remember to check robots.txt for web crawler policies'),
 ('Bob Wilson', 'Finance', 80000.00, 'Quarterly reports due next Friday'),
 ('Alice Brown', 'Security', 90000.00, 'Security audit scheduled for next week'),
-('Mike Johnson', 'IT', 82000.00, 'Network monitoring logs stored in /network-logs/ directory'),
+('Mike Johnson', 'IT', 82000.00, 'Network monitoring logs stored in /network-logs/network_analysis.log directory'),
 ('Sarah Davis', 'Marketing', 68000.00, 'New campaign launch scheduled for next month'),
 ('Tom Wilson', 'DevOps', 95000.00, 'Docker containers running on non-standard ports'),
 ('Lisa Chen', 'Security', 88000.00, 'Backup files should be secured properly'),
