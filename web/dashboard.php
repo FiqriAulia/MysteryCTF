@@ -92,43 +92,44 @@ if (!$conn->connect_error) {
                                 <small class="text-muted">Mode: <strong><?php echo ucfirst($difficulty); ?></strong></small>
 
                                 <?php
-                                if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
+                                if (isset($_GET['search'])) {
                                     $search = $_GET['search'];
                                     
-                                    // Another SQL injection vulnerability
-                                    $query = "SELECT * FROM employees WHERE name LIKE '%$search%' OR department LIKE '%$search%'";
+                                    echo "<h6 class='mt-4'><i class='fas fa-list'></i> Search Results:</h6>";
+                                    echo "<div class='table-responsive'>";
+                                    echo "<table class='table table-striped'>";
+                                    echo "<thead class='table-dark'><tr><th>Name</th><th>Department</th><th>Salary</th><th>Notes</th></tr></thead><tbody>";
                                     
-                                    // Debug: Log the query
-                                    error_log("Search Query: " . $query);
-                                    
-                                    $result = $conn->query($query);
-                                    
-                                    if ($conn->error) {
-                                        echo "<div class='alert alert-danger mt-3'><i class='fas fa-exclamation-triangle'></i> SQL Error: " . htmlspecialchars($conn->error) . "</div>";
-                                    }
-                                    
-                                    if ($result && $result->num_rows > 0) {
-                                        echo "<h6 class='mt-4'><i class='fas fa-list'></i> Search Results:</h6>";
-                                        echo "<div class='table-responsive'>";
-                                        echo "<table class='table table-striped'>";
-                                        echo "<thead class='table-dark'><tr><th>Name</th><th>Department</th><th>Salary</th><th>Notes</th></tr></thead><tbody>";
+                                    if (!empty(trim($search))) {
+                                        // Another SQL injection vulnerability
+                                        $query = "SELECT * FROM employees WHERE name LIKE '%$search%' OR department LIKE '%$search%'";
                                         
-                                        while ($row = $result->fetch_assoc()) {
-                                            echo "<tr>";
-                                            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['department']) . "</td>";
-                                            echo "<td>$" . (is_numeric($row['salary']) ? number_format($row['salary'], 2) : htmlspecialchars($row['salary'])) . "</td>";
-                                            
-                                            // XSS vulnerability - not escaping secret_note
-                                            echo "<td>" . $row['secret_note'] . "</td>";
-                                            echo "</tr>";
+                                        // Debug: Log the query
+                                        error_log("Search Query: " . $query);
+                                        
+                                        $result = $conn->query($query);
+                                        
+                                        if ($conn->error) {
+                                            echo "<tr><td colspan='4'><div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> SQL Error: " . htmlspecialchars($conn->error) . "</div></td></tr>";
+                                        } elseif ($result && $result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<tr>";
+                                                echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['department']) . "</td>";
+                                                echo "<td>$" . (is_numeric($row['salary']) ? number_format($row['salary'], 2) : htmlspecialchars($row['salary'])) . "</td>";
+                                                
+                                                // XSS vulnerability - not escaping secret_note
+                                                echo "<td>" . $row['secret_note'] . "</td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='4'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No employees found.</div></td></tr>";
                                         }
-                                        echo "</tbody></table></div>";
                                     } else {
-                                        echo "<div class='alert alert-warning mt-3'><i class='fas fa-exclamation-triangle'></i> No employees found.</div>";
+                                        echo "<tr><td colspan='4'><div class='alert alert-info'><i class='fas fa-info-circle'></i> Please enter a search term to find employees.</div></td></tr>";
                                     }
-                                } elseif (isset($_GET['search']) && empty(trim($_GET['search']))) {
-                                    echo "<div class='alert alert-info mt-3'><i class='fas fa-info-circle'></i> Please enter a search term to find employees.</div>";
+                                    
+                                    echo "</tbody></table></div>";
                                 }
                                 ?>
                             </div>
