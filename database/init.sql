@@ -30,7 +30,9 @@ CREATE TABLE secrets (
 INSERT INTO users (username, password, role) VALUES 
 ('guest', 'guest', 'user'),
 ('detective', 'sherlock', 'investigator'),
-('admin', 'admin123', 'admin');
+('sys_administrator', 'MyS73ry_C0rp_2024!@#', 'admin'),
+('backup_admin', 'B4ckup_S3cur3_P@ssw0rd', 'admin'),
+('security_chief', 'Ch13f_S3c_M@st3r_K3y', 'admin');
 
 -- Flag 2: Hidden in employee data  
 INSERT INTO employees (name, department, salary, secret_note) VALUES 
@@ -70,7 +72,18 @@ INSERT INTO secrets (title, content, access_level) VALUES
 ('Company Policy', 'Standard company policies and procedures', 1),
 ('Financial Reports', 'Q3 financial data and projections', 2),
 ('Top Secret Project', 'Classified project details - The final piece is hidden in /admin/vault.php', 3),
-('Emergency Contacts', 'Contact information for emergencies', 1);
+('Emergency Contacts', 'Contact information for emergencies', 1),
+('Network Configuration', 'Server configs stored in /config/network.conf', 2),
+('Database Credentials', 'Production DB access: db_user:FLAG{backup_files_exposed_g0bust3r}', 3),
+('API Keys', 'Third-party service integration keys', 2),
+('Security Logs', 'Incident response logs from last quarter', 2),
+('Backup Procedures', 'Daily backup scripts and recovery procedures', 1),
+('Admin Passwords', 'Administrative account credentials - FLAG{admin_access_s3cr3t_pr0j3ct}', 3),
+('Vendor Contracts', 'External service provider agreements', 1),
+('Compliance Reports', 'Regulatory compliance documentation', 2),
+('Disaster Recovery', 'Business continuity and disaster recovery plans', 2),
+('Source Code', 'Internal application source code repository access', 3),
+('Encryption Keys', 'Master encryption keys for data protection', 3);
 
 -- Create a view that might be useful for enumeration
 CREATE VIEW employee_summary AS 
