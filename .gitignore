@@ -6,6 +6,8 @@ mysql_data/
 
 # Logs
 *.log
+# Allow CTF log files
+!web/network-logs/*.log
 
 # OS files
 .DS_Store

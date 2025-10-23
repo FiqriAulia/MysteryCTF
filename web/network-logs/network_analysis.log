@@ -1,0 +1,61 @@
+[2024-01-15 08:30:12] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.201
+[2024-01-15 08:31:45] INFO: HTTP POST /index.php - Login attempt - User: sarah.davis - IP: 192.168.1.202
+[2024-01-15 08:33:22] INFO: HTTP GET /dashboard.php - User: sarah.davis - IP: 192.168.1.202
+[2024-01-15 08:35:18] INFO: HTTP GET /leaderboard.php - User: guest - IP: 192.168.1.203
+[2024-01-15 08:42:33] INFO: HTTP POST /submit.php - Flag submission - User: team_alpha - IP: 192.168.1.204
+[2024-01-15 08:45:12] INFO: HTTP GET /realtime-leaderboard.php - User: guest - IP: 192.168.1.205
+[2024-01-15 08:52:44] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.206
+[2024-01-15 09:05:33] INFO: HTTP POST /index.php - Login attempt - User: mike.johnson - IP: 192.168.1.207
+[2024-01-15 09:08:15] INFO: HTTP GET /dashboard.php - User: mike.johnson - IP: 192.168.1.207
+[2024-01-15 09:12:28] INFO: HTTP POST /dashboard.php - Search query: John - User: mike.johnson - IP: 192.168.1.207
+[2024-01-15 09:15:23] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.102
+[2024-01-15 09:16:45] INFO: HTTP POST /index.php - Login attempt - User: john.smith - IP: 192.168.1.103
+[2024-01-15 09:18:12] INFO: HTTP GET /dashboard.php - User: john.smith - IP: 192.168.1.103
+[2024-01-15 09:22:33] INFO: HTTP GET /submit.php - User: guest - IP: 192.168.1.104
+[2024-01-15 09:25:44] INFO: HTTP POST /submit.php - Flag submission - User: team_beta - IP: 192.168.1.208
+[2024-01-15 09:28:17] INFO: HTTP GET /leaderboard.php - User: team_beta - IP: 192.168.1.208
+[2024-01-15 09:32:55] INFO: HTTP POST /dashboard.php - Search query: IT - User: john.smith - IP: 192.168.1.103
+[2024-01-15 09:35:12] INFO: HTTP GET /robots.txt - IP: 192.168.1.209
+[2024-01-15 09:38:44] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.210
+[2024-01-15 09:41:23] INFO: HTTP POST /index.php - Login attempt - User: lisa.chen - IP: 192.168.1.211
+[2024-01-15 09:43:18] INFO: HTTP GET /dashboard.php - User: lisa.chen - IP: 192.168.1.211
+[2024-01-15 09:45:18] WARN: Multiple failed login attempts - IP: 192.168.1.105
+[2024-01-15 09:48:33] INFO: HTTP POST /dashboard.php - Search query: Security - User: lisa.chen - IP: 192.168.1.211
+[2024-01-15 09:52:15] INFO: HTTP GET /submit.php - User: lisa.chen - IP: 192.168.1.211
+[2024-01-15 09:55:44] INFO: HTTP POST /submit.php - Flag submission - User: team_gamma - IP: 192.168.1.212
+[2024-01-15 09:58:22] INFO: HTTP GET /realtime-leaderboard.php - User: guest - IP: 192.168.1.213
+[2024-01-15 10:02:18] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.214
+[2024-01-15 10:05:33] INFO: HTTP POST /index.php - Login attempt - User: tom.wilson - IP: 192.168.1.215
+[2024-01-15 10:08:12] INFO: HTTP GET /dashboard.php - User: tom.wilson - IP: 192.168.1.215
+[2024-01-15 10:11:45] INFO: HTTP POST /dashboard.php - Search query: Finance - User: tom.wilson - IP: 192.168.1.215
+[2024-01-15 10:12:34] INFO: HTTP GET /robots.txt - IP: 192.168.1.106
+[2024-01-15 10:15:22] INFO: HTTP GET /backup/ - IP: 192.168.1.106
+[2024-01-15 10:18:44] INFO: HTTP GET /leaderboard.php - User: guest - IP: 192.168.1.216
+[2024-01-15 10:21:33] INFO: HTTP POST /submit.php - Flag submission - User: team_delta - IP: 192.168.1.217
+[2024-01-15 10:23:45] INFO: HTTP GET /dashboard.php - User: admin - IP: 192.168.1.100
+[2024-01-15 10:24:12] INFO: HTTP GET /admin/secrets.php - User: admin - IP: 192.168.1.100
+[2024-01-15 10:24:45] WARN: Unauthorized access attempt to /admin/ - IP: 192.168.1.105
+[2024-01-15 10:25:30] INFO: Admin session established - Session ID: admin_session_xyz123
+[2024-01-15 10:26:15] INFO: Database query executed: SELECT * FROM secrets WHERE access_level = 3
+[2024-01-15 10:27:45] INFO: Security vault accessed successfully
+[2024-01-15 10:28:12] INFO: Admin logout - Session terminated
+[2024-01-15 10:30:44] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.218
+[2024-01-15 10:33:22] INFO: HTTP POST /index.php - Login attempt - User: david.brown - IP: 192.168.1.219
+[2024-01-15 10:35:44] INFO: HTTP GET /network-logs/ - IP: 192.168.1.107
+[2024-01-15 10:38:15] INFO: HTTP GET /dashboard.php - User: david.brown - IP: 192.168.1.219
+[2024-01-15 10:41:33] INFO: HTTP POST /dashboard.php - Search query: Marketing - User: david.brown - IP: 192.168.1.219
+[2024-01-15 10:42:18] INFO: HTTP GET /leaderboard.php - User: detective - IP: 192.168.1.108
+[2024-01-15 10:45:44] INFO: HTTP GET /submit.php - User: david.brown - IP: 192.168.1.219
+[2024-01-15 10:48:22] INFO: HTTP POST /submit.php - Flag submission - User: team_epsilon - IP: 192.168.1.220
+[2024-01-15 10:52:15] INFO: HTTP GET /realtime-leaderboard.php - User: guest - IP: 192.168.1.221
+[2024-01-15 10:55:33] INFO: HTTP GET /robots.txt - IP: 192.168.1.222
+[2024-01-15 10:58:44] INFO: HTTP POST /index.php - Login attempt - User: emma.taylor - IP: 192.168.1.223
+[2024-01-15 11:01:12] INFO: HTTP GET /dashboard.php - User: emma.taylor - IP: 192.168.1.223
+[2024-01-15 11:03:45] INFO: HTTP POST /dashboard.php - Search query: HR - User: emma.taylor - IP: 192.168.1.223
+[2024-01-15 11:05:33] INFO: HTTP POST /dashboard.php - Search query executed - User: admin - IP: 192.168.1.100
+[2024-01-15 11:08:22] INFO: HTTP GET /leaderboard.php - User: guest - IP: 192.168.1.224
+[2024-01-15 11:12:44] INFO: HTTP POST /submit.php - Flag submission - User: team_zeta - IP: 192.168.1.225
+[2024-01-15 11:15:33] INFO: HTTP GET /index.php - User: guest - IP: 192.168.1.226
+[2024-01-15 11:18:15] INFO: HTTP GET /realtime-leaderboard.php - User: guest - IP: 192.168.1.227
+[2024-01-15 11:22:44] INFO: HTTP POST /dashboard.php - Search query: DevOps - User: emma.taylor - IP: 192.168.1.223
+[2024-01-15 11:25:33] INFO: HTTP GET /submit.php - User: emma.taylor - IP: 192.168.1.223
