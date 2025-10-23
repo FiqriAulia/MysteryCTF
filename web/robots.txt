@@ -11,6 +11,6 @@ Disallow: /cache/
 # Security notice: Sensitive directories restricted
 # Contact IT department for access to monitoring systems
 # Network forensics data available for authorized personnel
-# Backup retention policy: 30 days
+# SQL Backup retention policy: 30 days
 # 
 # Last updated: 2024-01-15 by IT Security Team
