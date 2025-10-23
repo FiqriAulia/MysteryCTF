@@ -30,6 +30,8 @@
 [2024-01-15 10:11:45] INFO: HTTP POST /dashboard.php - Search query: Finance - User: tom.wilson - IP: 192.168.1.215
 [2024-01-15 10:12:34] INFO: HTTP GET /robots.txt - IP: 192.168.1.106
 [2024-01-15 10:15:22] INFO: HTTP GET /backup/ - IP: 192.168.1.106
+[2024-01-15 10:16:45] INFO: HTTP GET /backup/database.sql - IP: 192.168.1.106
+[2024-01-15 10:17:12] WARN: Sensitive file accessed: database.sql - IP: 192.168.1.106
 [2024-01-15 10:18:44] INFO: HTTP GET /leaderboard.php - User: guest - IP: 192.168.1.216
 [2024-01-15 10:21:33] INFO: HTTP POST /submit.php - Flag submission - User: team_delta - IP: 192.168.1.217
 [2024-01-15 10:23:45] INFO: HTTP GET /dashboard.php - User: admin - IP: 192.168.1.100
