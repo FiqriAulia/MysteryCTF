@@ -54,6 +54,14 @@ if (!$conn->connect_error) {
                     </div>
                     <div class="card-body">
                         
+                        <?php if (isset($_SESSION['sql_injection_flag'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="fas fa-trophy"></i> <strong>SQL Injection Successful!</strong><br>
+                            <code><?php echo $_SESSION['sql_injection_flag']; ?></code>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <?php unset($_SESSION['sql_injection_flag']); endif; ?>
+                        
                         <?php if ($_SESSION['role'] == 'admin'): ?>
                         <!-- Admin access granted - investigate further for company secrets -->
                         <?php endif; ?>
@@ -101,6 +109,11 @@ if (!$conn->connect_error) {
                                     echo "<thead class='table-dark'><tr><th>ID</th><th>Name</th><th>Department</th><th>Salary</th><th>Notes</th><th>Created At</th></tr></thead><tbody>";
                                     
                                     if (!empty(trim($search))) {
+                                        // Detect additional SQL injection attempts in search
+                                        $is_search_injection = (strpos(strtolower($search), 'union') !== false && 
+                                                              strpos(strtolower($search), 'select') !== false) ||
+                                                             (strpos(strtolower($search), 'information_schema') !== false);
+                                        
                                         // Another SQL injection vulnerability
                                         $query = "SELECT * FROM employees WHERE name LIKE '%$search%' OR department LIKE '%$search%'";
                                         
@@ -108,6 +121,12 @@ if (!$conn->connect_error) {
                                         error_log("Search Query: " . $query);
                                         
                                         $result = $conn->query($query);
+                                        
+                                        // Show additional SQL injection success
+                                        if ($is_search_injection && $result) {
+                                            echo "<tr><td colspan='6'><div class='alert alert-success'><i class='fas fa-trophy'></i> <strong>Advanced SQL Injection!</strong><br>";
+                                            echo "<code>" . (getenv('FLAG_3') ?: 'FLAG{sql_injection_master_b4d1c0d3}') . "</code></div></td></tr>";
+                                        }
                                         
                                         if ($conn->error) {
                                             echo "<tr><td colspan='6'><div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> SQL Error: " . htmlspecialchars($conn->error) . "</div></td></tr>";
@@ -125,7 +144,9 @@ if (!$conn->connect_error) {
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='6'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No employees found.</div></td></tr>";
+                                            if (!$is_search_injection) {
+                                                echo "<tr><td colspan='6'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No employees found.</div></td></tr>";
+                                            }
                                         }
                                     } else {
                                         echo "<tr><td colspan='6'><div class='alert alert-info'><i class='fas fa-info-circle'></i> Please enter a search term to find employees.</div></td></tr>";

@@ -6,6 +6,14 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     
+    // Detect SQL injection attempts
+    $is_sql_injection = (strpos(strtolower($username), "'") !== false && 
+                        (strpos(strtolower($username), 'or') !== false || 
+                         strpos(strtolower($username), 'union') !== false)) ||
+                       (strpos(strtolower($password), "'") !== false && 
+                        (strpos(strtolower($password), 'or') !== false || 
+                         strpos(strtolower($password), 'union') !== false));
+    
     // Vulnerable SQL query - intentional for CTF
     $conn = new mysqli(
         getenv('DB_HOST') ?: 'db',
@@ -30,6 +38,12 @@ if (isset($_POST['login'])) {
         $user = $result->fetch_assoc();
         $_SESSION['user'] = $user['username'];
         $_SESSION['role'] = $user['role'];
+        
+        // Show SQL injection success flag
+        if ($is_sql_injection) {
+            $_SESSION['sql_injection_flag'] = getenv('FLAG_3') ?: 'FLAG{sql_injection_master_b4d1c0d3}';
+        }
+        
         header("Location: dashboard.php");
         exit();
     } else {
