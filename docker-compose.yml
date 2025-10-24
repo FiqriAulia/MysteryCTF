@@ -1,5 +1,12 @@
 version: '3.8'
 
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: "2001:db8::/32"
+
 services:
   web:
     build: ./web
