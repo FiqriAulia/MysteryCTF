@@ -33,36 +33,26 @@ $flags = [
     (getenv('FLAG_6') ?: 'FLAG{vault_master_mystery_solved_c0mpl3t3}') => ['name' => 'Vault Master', 'points' => 300]
 ];
 
+// Detect flag patterns and redirect to giphy
 if (isset($_POST['submit_flag'])) {
-    $team_name = trim($_POST['team_name']);
     $flag_content = trim($_POST['flag_content']);
+    
+    // Check if it's one of the main flags - redirect to giphy
+    if (isset($flags[$flag_content])) {
+        header("Location: giphy.php?flag=" . urlencode($flag_content));
+        exit();
+    }
+    
+    // Check for any FLAG{} pattern - redirect to giphy
+    if (preg_match('/FLAG\{[^}]+\}/', $flag_content)) {
+        header("Location: giphy.php?flag=" . urlencode($flag_content));
+        exit();
+    }
+    
+    $team_name = trim($_POST['team_name']);
     
     if (empty($team_name) || empty($flag_content)) {
         $error = "Team name and flag are required!";
-    } elseif (isset($flags[$flag_content])) {
-        $flag_info = $flags[$flag_content];
-        
-        // Check if team already submitted this flag
-        $check_query = "SELECT * FROM flag_submissions WHERE team_name = ? AND flag_content = ?";
-        $check_stmt = $conn->prepare($check_query);
-        $check_stmt->bind_param("ss", $team_name, $flag_content);
-        $check_stmt->execute();
-        $result = $check_stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            $error = "Flag already submitted by team '$team_name'!";
-        } else {
-            // Insert new flag submission
-            $insert_query = "INSERT INTO flag_submissions (team_name, flag_content, points, flag_name) VALUES (?, ?, ?, ?)";
-            $insert_stmt = $conn->prepare($insert_query);
-            $insert_stmt->bind_param("ssis", $team_name, $flag_content, $flag_info['points'], $flag_info['name']);
-            
-            if ($insert_stmt->execute()) {
-                $success = "FLAG ACCEPTED! Team: $team_name | Flag: {$flag_info['name']} | Points: {$flag_info['points']}";
-            } else {
-                $error = "Error submitting flag. Please try again.";
-            }
-        }
     } else {
         $error = "Invalid flag! Please check your flag format.";
     }
