@@ -23,7 +23,7 @@ CREATE TABLE secrets (
     title VARCHAR(100),
     content TEXT,
     access_level INT DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Flag 1: SQL Injection vulnerability (weak password)
@@ -68,22 +68,22 @@ INSERT INTO employees (name, department, salary, secret_note) VALUES
 ('Rachel Taylor', 'Finance', 75500.00, 'Audit preparation documentation ready');
 
 -- Flag 3: In secrets table (requires admin access)
-INSERT INTO secrets (title, content, access_level) VALUES 
-('Company Policy', 'Standard company policies and procedures', 1),
-('Financial Reports', 'Q3 financial data and projections', 2),
-('Top Secret Project', 'Classified project details - The final piece is hidden in /admin/vault.php', 3),
-('Emergency Contacts', 'Contact information for emergencies', 1),
-('Network Configuration', 'Server configs stored in /config/network.conf', 2),
-('Database Credentials', 'Production DB access: db_user:FLAG{backup_files_exposed_g0bust3r}', 3),
-('API Keys', 'Third-party service integration keys', 2),
-('Security Logs', 'Incident response logs from last quarter', 2),
-('Backup Procedures', 'Daily backup scripts and recovery procedures', 1),
-('Admin Passwords', 'Administrative account credentials - FLAG{admin_access_s3cr3t_pr0j3ct}', 3),
-('Vendor Contracts', 'External service provider agreements', 1),
-('Compliance Reports', 'Regulatory compliance documentation', 2),
-('Disaster Recovery', 'Business continuity and disaster recovery plans', 2),
-('Source Code', 'Internal application source code repository access', 3),
-('Encryption Keys', 'Master encryption keys for data protection', 3);
+INSERT INTO secrets (id, title, content, access_level, created_at) VALUES 
+(1, 'Company Policy', 'Standard company policies and procedures', 1, DEFAULT),
+(2, 'Financial Reports', 'Q3 financial data and projections', 2, DEFAULT),
+(3, 'Top Secret Project', 'Classified project details - The final piece is hidden in /admin/vault.php', 3, DEFAULT),
+(4, 'Emergency Contacts', 'Contact information for emergencies', 1, DEFAULT),
+(5, 'Network Configuration', 'Server configs stored in /config/network.conf', 2, DEFAULT),
+(6, 'Database Credentials', 'Production DB access: db_user:FLAG{backup_files_exposed_g0bust3r}', 3, DEFAULT),
+(7, 'API Keys', 'Third-party service integration keys', 2, DEFAULT),
+(8, 'Detective Reference', 'herlock sholmes', 2, '1887-11-01 00:00:00'),
+(9, 'Backup Procedures', 'Daily backup scripts and recovery procedures', 1, DEFAULT),
+(10, 'Admin Passwords', 'Administrative account credentials - FLAG{admin_access_s3cr3t_pr0j3ct}', 3, DEFAULT),
+(11, 'Vendor Contracts', 'External service provider agreements', 1, DEFAULT),
+(12, 'Compliance Reports', 'Regulatory compliance documentation', 2, DEFAULT),
+(13, 'Disaster Recovery', 'Business continuity and disaster recovery plans', 2, DEFAULT),
+(14, 'Source Code', 'Internal application source code repository access', 3, DEFAULT),
+(15, 'Encryption Keys', 'Master encryption keys for data protection', 3, DEFAULT);
 
 -- Create a view that might be useful for enumeration
 CREATE VIEW employee_summary AS 

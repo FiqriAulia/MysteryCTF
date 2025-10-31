@@ -23,8 +23,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS flag_submissions (
     UNIQUE KEY unique_team_flag (team_name, flag_content)
 )");
 
-// Flag definitions with points
-$flags = [
+// Real flags from .env with points
+$real_flags = [
     (getenv('FLAG_1') ?: 'FLAG{hidden_service_discovered_8081}') => ['name' => 'Hidden Service Discovery', 'points' => 100],
     (getenv('FLAG_2') ?: 'FLAG{backup_files_exposed_g0bust3r}') => ['name' => 'Backup File Discovery', 'points' => 150],
     (getenv('FLAG_3') ?: 'FLAG{sql_injection_master_b4d1c0d3}') => ['name' => 'SQL Injection Master', 'points' => 200],
@@ -33,27 +33,60 @@ $flags = [
     (getenv('FLAG_6') ?: 'FLAG{vault_master_mystery_solved_c0mpl3t3}') => ['name' => 'Vault Master', 'points' => 300]
 ];
 
-// Detect flag patterns and redirect to giphy
+// Hardcoded fake flags (redirect to giphy)
+$fake_flags = [
+    'FLAG{hidden_service_discovered_8081}',
+    'FLAG{backup_files_exposed_g0bust3r}',
+    'FLAG{sql_injection_master_b4d1c0d3}',
+    'FLAG{xss_found_h3r3}',
+    'FLAG{admin_access_s3cr3t_pr0j3ct}',
+    'FLAG{vault_master_mystery_solved_c0mpl3t3}'
+];
+
 if (isset($_POST['submit_flag'])) {
-    $flag_content = trim($_POST['flag_content']);
-    
-    // Check if it's one of the main flags - redirect to giphy
-    if (isset($flags[$flag_content])) {
-        header("Location: giphy.php?flag=" . urlencode($flag_content));
-        exit();
-    }
-    
-    // Check for any FLAG{} pattern - redirect to giphy
-    if (preg_match('/FLAG\{[^}]+\}/', $flag_content)) {
-        header("Location: giphy.php?flag=" . urlencode($flag_content));
-        exit();
-    }
-    
     $team_name = trim($_POST['team_name']);
+    $flag_content = trim($_POST['flag_content']);
     
     if (empty($team_name) || empty($flag_content)) {
         $error = "Team name and flag are required!";
-    } else {
+    } 
+    // Check if it's a hardcoded fake flag - redirect to giphy
+    elseif (in_array($flag_content, $fake_flags)) {
+        header("Location: giphy.php?flag=" . urlencode($flag_content) . "&type=fake");
+        exit();
+    }
+    // Check if it's a real flag from .env
+    elseif (isset($real_flags[$flag_content])) {
+        $flag_info = $real_flags[$flag_content];
+        
+        // Check if team already submitted this flag
+        $check_query = "SELECT * FROM flag_submissions WHERE team_name = ? AND flag_content = ?";
+        $check_stmt = $conn->prepare($check_query);
+        $check_stmt->bind_param("ss", $team_name, $flag_content);
+        $check_stmt->execute();
+        $result = $check_stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $error = "Flag already submitted by team '$team_name'!";
+        } else {
+            // Insert new flag submission
+            $insert_query = "INSERT INTO flag_submissions (team_name, flag_content, points, flag_name) VALUES (?, ?, ?, ?)";
+            $insert_stmt = $conn->prepare($insert_query);
+            $insert_stmt->bind_param("ssis", $team_name, $flag_content, $flag_info['points'], $flag_info['name']);
+            
+            if ($insert_stmt->execute()) {
+                $success = "FLAG ACCEPTED! Team: $team_name | Flag: {$flag_info['name']} | Points: {$flag_info['points']}";
+            } else {
+                $error = "Error submitting flag. Please try again.";
+            }
+        }
+    }
+    // Check for any other FLAG{} pattern - redirect to giphy
+    elseif (preg_match('/FLAG\{[^}]+\}/', $flag_content)) {
+        header("Location: giphy.php?flag=" . urlencode($flag_content) . "&type=unknown");
+        exit();
+    }
+    else {
         $error = "Invalid flag! Please check your flag format.";
     }
 }

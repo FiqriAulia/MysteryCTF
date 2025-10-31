@@ -32,14 +32,18 @@
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // Get statistics
+        // Get statistics with error handling
         $total_teams_query = "SELECT COUNT(DISTINCT team_name) as total_teams FROM flag_submissions";
         $total_submissions_query = "SELECT COUNT(*) as total_submissions FROM flag_submissions";
         $max_points_query = "SELECT MAX(total_points) as max_points FROM (SELECT SUM(points) as total_points FROM flag_submissions GROUP BY team_name) as team_totals";
         
-        $total_teams = $conn->query($total_teams_query)->fetch_assoc()['total_teams'] ?? 0;
-        $total_submissions = $conn->query($total_submissions_query)->fetch_assoc()['total_submissions'] ?? 0;
-        $max_points = $conn->query($max_points_query)->fetch_assoc()['max_points'] ?? 0;
+        $total_teams_result = $conn->query($total_teams_query);
+        $total_submissions_result = $conn->query($total_submissions_query);
+        $max_points_result = $conn->query($max_points_query);
+        
+        $total_teams = ($total_teams_result && $total_teams_result->num_rows > 0) ? $total_teams_result->fetch_assoc()['total_teams'] : 0;
+        $total_submissions = ($total_submissions_result && $total_submissions_result->num_rows > 0) ? $total_submissions_result->fetch_assoc()['total_submissions'] : 0;
+        $max_points = ($max_points_result && $max_points_result->num_rows > 0) ? $max_points_result->fetch_assoc()['max_points'] : 0;
         ?>
 
         <div class="row">
@@ -72,7 +76,7 @@
                             <div class="col-md-3">
                                 <div class="card bg-warning text-white text-center">
                                     <div class="card-body">
-                                        <h2><?php echo $max_points; ?></h2>
+                                        <h2><?php echo $max_points ?: 0; ?></h2>
                                         <p>Highest Score</p>
                                     </div>
                                 </div>
@@ -134,7 +138,7 @@
                                 }
                                 
                                 $progress_percentage = ($row['total_points'] / 1200) * 100;
-                                $duration = $row['first_submission'] && $row['last_submission'] ? 
+                                $duration = ($row['first_submission'] && $row['last_submission']) ? 
                                     round((strtotime($row['last_submission']) - strtotime($row['first_submission'])) / 60, 1) : 0;
                                 
                                 echo "<tr class='$rank_class'>";
@@ -148,8 +152,8 @@
                                     <small>" . round($progress_percentage, 1) . "%</small>
                                 </td>";
                                 echo "<td><strong>" . $row['flags_found'] . "/6</strong></td>";
-                                echo "<td><small>" . date('H:i:s', strtotime($row['first_submission'])) . "</small></td>";
-                                echo "<td><small>" . date('H:i:s', strtotime($row['last_submission'])) . "</small></td>";
+                                echo "<td><small>" . ($row['first_submission'] ? date('H:i:s', strtotime($row['first_submission'])) : '-') . "</small></td>";
+                                echo "<td><small>" . ($row['last_submission'] ? date('H:i:s', strtotime($row['last_submission'])) : '-') . "</small></td>";
                                 echo "<td><small>" . $duration . "m</small></td>";
                                 echo "<td>$trophy</td>";
                                 echo "</tr>";
@@ -199,6 +203,8 @@
                                     echo "</tr>";
                                 }
                                 echo "</tbody></table></div>";
+                            } else {
+                                echo "<p class='text-muted'>No flag statistics available yet.</p>";
                             }
                             ?>
                         </div>

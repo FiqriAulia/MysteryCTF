@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  ctf-network:
+    driver: bridge
+
 services:
   web:
     build: ./web
@@ -11,6 +15,8 @@ services:
       - .env
     volumes:
       - ./web:/var/www/html
+    networks:
+      - ctf-network
 
   db:
     image: mysql:8.0
@@ -22,6 +28,8 @@ services:
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql_data:/var/lib/mysql
+    networks:
+      - ctf-network
 
   hidden-service:
     build: ./web
@@ -33,6 +41,8 @@ services:
       - HIDDEN_MODE=true
     volumes:
       - ./web/hidden:/var/www/html
+    networks:
+      - ctf-network
 
 volumes:
   mysql_data:

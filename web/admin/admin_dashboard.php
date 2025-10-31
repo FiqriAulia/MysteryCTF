@@ -120,12 +120,20 @@ if ($conn->connect_error) {
             echo "<div class='alert'>⚠️ All submissions have been reset!</div>";
         }
 
-        // Get comprehensive statistics
+        // Get comprehensive statistics with error handling
         $stats = [];
-        $stats['total_teams'] = $conn->query("SELECT COUNT(DISTINCT team_name) as count FROM flag_submissions")->fetch_assoc()['count'] ?? 0;
-        $stats['total_submissions'] = $conn->query("SELECT COUNT(*) as count FROM flag_submissions")->fetch_assoc()['count'] ?? 0;
-        $stats['completed_teams'] = $conn->query("SELECT COUNT(*) as count FROM (SELECT team_name FROM flag_submissions GROUP BY team_name HAVING COUNT(*) = 6) as completed")->fetch_assoc()['count'] ?? 0;
-        $stats['avg_score'] = $conn->query("SELECT AVG(total_points) as avg FROM (SELECT SUM(points) as total_points FROM flag_submissions GROUP BY team_name) as team_totals")->fetch_assoc()['avg'] ?? 0;
+        
+        $total_teams_result = $conn->query("SELECT COUNT(DISTINCT team_name) as count FROM flag_submissions");
+        $stats['total_teams'] = ($total_teams_result && $total_teams_result->num_rows > 0) ? $total_teams_result->fetch_assoc()['count'] : 0;
+        
+        $total_submissions_result = $conn->query("SELECT COUNT(*) as count FROM flag_submissions");
+        $stats['total_submissions'] = ($total_submissions_result && $total_submissions_result->num_rows > 0) ? $total_submissions_result->fetch_assoc()['count'] : 0;
+        
+        $completed_teams_result = $conn->query("SELECT COUNT(*) as count FROM (SELECT team_name FROM flag_submissions GROUP BY team_name HAVING COUNT(*) = 6) as completed");
+        $stats['completed_teams'] = ($completed_teams_result && $completed_teams_result->num_rows > 0) ? $completed_teams_result->fetch_assoc()['count'] : 0;
+        
+        $avg_score_result = $conn->query("SELECT AVG(total_points) as avg FROM (SELECT SUM(points) as total_points FROM flag_submissions GROUP BY team_name) as team_totals");
+        $stats['avg_score'] = ($avg_score_result && $avg_score_result->num_rows > 0) ? $avg_score_result->fetch_assoc()['avg'] : 0;
         ?>
 
         <h1>🎮 Mystery Corporation CTF - Admin Control Center</h1>
@@ -146,7 +154,7 @@ if ($conn->connect_error) {
                 <div class="stat-label">Completed Teams</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?php echo round($stats['avg_score']); ?></div>
+                <div class="stat-number"><?php echo round($stats['avg_score'] ?: 0); ?></div>
                 <div class="stat-label">Average Score</div>
             </div>
         </div>
@@ -184,7 +192,7 @@ if ($conn->connect_error) {
                         echo "<td>" . htmlspecialchars($row['team_name']) . "</td>";
                         echo "<td>" . $row['total_points'] . "</td>";
                         echo "<td>" . $row['flags_found'] . "/6</td>";
-                        echo "<td>" . date('H:i:s', strtotime($row['last_submission'])) . "</td>";
+                        echo "<td>" . ($row['last_submission'] ? date('H:i:s', strtotime($row['last_submission'])) : '-') . "</td>";
                         echo "</tr>";
                         $rank++;
                     }
@@ -223,6 +231,8 @@ if ($conn->connect_error) {
                         echo "</tr>";
                     }
                     echo "</table>";
+                } else {
+                    echo "<p>No flag statistics available yet.</p>";
                 }
                 ?>
             </div>
@@ -277,7 +287,8 @@ if ($conn->connect_error) {
                 echo "<tr><th>Team Name</th><th>Points</th><th>Flags</th><th>Duration</th><th>Actions</th></tr>";
                 
                 while ($row = $teams_result->fetch_assoc()) {
-                    $duration = round((strtotime($row['last_submission']) - strtotime($row['first_submission'])) / 60, 1);
+                    $duration = ($row['first_submission'] && $row['last_submission']) ? 
+                        round((strtotime($row['last_submission']) - strtotime($row['first_submission'])) / 60, 1) : 0;
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['team_name']) . "</td>";
                     echo "<td>" . $row['total_points'] . "</td>";
@@ -292,6 +303,8 @@ if ($conn->connect_error) {
                     echo "</tr>";
                 }
                 echo "</table>";
+            } else {
+                echo "<p>No teams registered yet.</p>";
             }
             ?>
         </div>
@@ -313,8 +326,8 @@ if ($conn->connect_error) {
             
             // Get current difficulty from database
             $conn->query("CREATE TABLE IF NOT EXISTS ctf_settings (setting_key VARCHAR(50) PRIMARY KEY, setting_value TEXT)");
-            $result = $conn->query("SELECT setting_value FROM ctf_settings WHERE setting_key = 'difficulty'");
-            $current_difficulty = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['setting_value'] : 'advanced';
+            $difficulty_result = $conn->query("SELECT setting_value FROM ctf_settings WHERE setting_key = 'difficulty'");
+            $current_difficulty = ($difficulty_result && $difficulty_result->num_rows > 0) ? $difficulty_result->fetch_assoc()['setting_value'] : 'advanced';
             ?>
             <form method="POST">
                 <label>Global Difficulty Level:</label><br>

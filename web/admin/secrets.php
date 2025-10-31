@@ -12,6 +12,10 @@ $conn = new mysqli(
     getenv('DB_PASS') ?: 'mystery123',
     getenv('DB_NAME') ?: 'mystery_corp'
 );
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +32,7 @@ $conn = new mysqli(
         th { background: #f2f2f2; }
         .flag { background: #d4edda; padding: 15px; margin: 15px 0; border: 1px solid #c3e6cb; border-radius: 5px; }
         .secret-content { background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; }
+        .error { background: #f8d7da; padding: 15px; margin: 15px 0; border: 1px solid #f5c6cb; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -44,7 +49,7 @@ $conn = new mysqli(
         
         <div class="flag">
             <strong>🎉 CONGRATULATIONS!</strong> You've accessed the admin secrets panel!<br>
-            <code>FLAG{admin_access_s3cr3t_pr0j3ct}</code><br>
+            <code><?php echo getenv('FLAG_5') ?: 'FLAG{admin_access_s3cr3t_pr0j3ct}'; ?></code><br>
             <em>You're getting closer to the truth...</em>
         </div>
 
@@ -52,7 +57,12 @@ $conn = new mysqli(
         $query = "SELECT * FROM secrets ORDER BY access_level DESC";
         $result = $conn->query($query);
         
-        if ($result && $result->num_rows > 0) {
+        if ($conn->error) {
+            echo "<div class='error'>";
+            echo "<strong>⚠️ Database Error:</strong> " . htmlspecialchars($conn->error);
+            echo "<br><small>The secrets table may not exist yet. Please restart the database containers.</small>";
+            echo "</div>";
+        } elseif ($result && $result->num_rows > 0) {
             echo "<h3>Company Secrets Database</h3>";
             echo "<table>";
             echo "<tr><th>ID</th><th>Title</th><th>Access Level</th><th>Content</th><th>Created</th></tr>";
@@ -67,15 +77,13 @@ $conn = new mysqli(
                 echo "</tr>";
             }
             echo "</table>";
+        } else {
+            echo "<div class='error'>";
+            echo "<strong>📋 No Secrets Found</strong><br>";
+            echo "The secrets table exists but contains no data. Please check the database initialization.";
+            echo "</div>";
         }
         ?>
-
-        <div style="margin-top: 30px; padding: 15px; background: #f8d7da; border: 1px solid #f5c6cb;">
-            <h3>⚠️ Security Notice</h3>
-            <p>The final piece of the puzzle is hidden in the security vault.</p>
-            <p>Access: <a href="vault.php">Security Vault</a></p>
-            <p><em>Warning: This area requires the highest security clearance...</em></p>
-        </div>
     </div>
 </body>
 </html>
