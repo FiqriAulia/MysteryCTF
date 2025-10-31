@@ -50,10 +50,34 @@ if (isset($_POST['submit_flag'])) {
     if (empty($team_name) || empty($flag_content)) {
         $error = "Team name and flag are required!";
     } 
-    // Check if it's a hardcoded fake flag - redirect to giphy
+    // Check if it's a hardcoded fake flag - save with 0 points and mark team
     elseif (in_array($flag_content, $fake_flags)) {
-        header("Location: giphy.php?flag=" . urlencode($flag_content) . "&type=fake");
-        exit();
+        $cheater_team = $team_name . " ❓";
+        
+        // Check if team already submitted this flag
+        $check_query = "SELECT * FROM flag_submissions WHERE team_name LIKE ? AND flag_content = ?";
+        $check_stmt = $conn->prepare($check_query);
+        $team_pattern = $team_name . "%";
+        $check_stmt->bind_param("ss", $team_pattern, $flag_content);
+        $check_stmt->execute();
+        $result = $check_stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $error = "Flag already submitted by team '$team_name'!";
+        } else {
+            // Insert fake flag with 0 points
+            $insert_query = "INSERT INTO flag_submissions (team_name, flag_content, points, flag_name) VALUES (?, ?, 0, ?)";
+            $insert_stmt = $conn->prepare($insert_query);
+            $fake_flag_name = "SUS";
+            $insert_stmt->bind_param("sss", $cheater_team, $flag_content, $fake_flag_name);
+            
+            if ($insert_stmt->execute()) {
+                header("Location: giphy.php?flag=" . urlencode($flag_content) . "&type=fake");
+                exit();
+            } else {
+                $error = "Error submitting flag. Please try again.";
+            }
+        }
     }
     // Check if it's a real flag from .env
     elseif (isset($real_flags[$flag_content])) {
@@ -81,10 +105,34 @@ if (isset($_POST['submit_flag'])) {
             }
         }
     }
-    // Check for any other FLAG{} pattern - redirect to giphy
+    // Check for any other FLAG{} pattern - save as unknown flag
     elseif (preg_match('/FLAG\{[^}]+\}/', $flag_content)) {
-        header("Location: giphy.php?flag=" . urlencode($flag_content) . "&type=unknown");
-        exit();
+        $unknown_team = $team_name . " ❓";
+        
+        // Check if team already submitted this flag
+        $check_query = "SELECT * FROM flag_submissions WHERE team_name LIKE ? AND flag_content = ?";
+        $check_stmt = $conn->prepare($check_query);
+        $team_pattern = $team_name . "%";
+        $check_stmt->bind_param("ss", $team_pattern, $flag_content);
+        $check_stmt->execute();
+        $result = $check_stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $error = "Flag already submitted by team '$team_name'!";
+        } else {
+            // Insert unknown flag with 0 points
+            $insert_query = "INSERT INTO flag_submissions (team_name, flag_content, points, flag_name) VALUES (?, ?, 0, ?)";
+            $insert_stmt = $conn->prepare($insert_query);
+            $unknown_flag_name = "SUS";
+            $insert_stmt->bind_param("sss", $unknown_team, $flag_content, $unknown_flag_name);
+            
+            if ($insert_stmt->execute()) {
+                header("Location: giphy.php?flag=" . urlencode($flag_content) . "&type=unknown");
+                exit();
+            } else {
+                $error = "Error submitting flag. Please try again.";
+            }
+        }
     }
     else {
         $error = "Invalid flag! Please check your flag format.";

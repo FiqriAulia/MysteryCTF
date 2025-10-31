@@ -146,10 +146,17 @@
             let html = '';
             activity.forEach(item => {
                 const time = new Date(item.submitted_at).toLocaleTimeString();
-                html += `<div class="activity-item">
-                    <strong>${item.team_name}</strong> solved <em>${item.flag_name}</em> 
-                    (+${item.points} pts) at ${time}
-                </div>`;
+                if (item.is_sus) {
+                    html += `<div class="activity-item" style="background: #e74c3c; color: white; border-radius: 5px;">
+                        <strong>${item.team_name}</strong> submitted <em>SUS</em> 
+                        (+${item.points} pts) at ${time} 🚨
+                    </div>`;
+                } else {
+                    html += `<div class="activity-item">
+                        <strong>${item.team_name}</strong> solved <em>${item.flag_name}</em> 
+                        (+${item.points} pts) at ${time}
+                    </div>`;
+                }
             });
             document.getElementById('recent-activity').innerHTML = html || '<div class="activity-item">No recent activity</div>';
         }

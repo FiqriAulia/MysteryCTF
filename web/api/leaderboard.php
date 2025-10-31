@@ -62,7 +62,8 @@ if ($recent_result && $recent_result->num_rows > 0) {
             'team_name' => $row['team_name'],
             'flag_name' => $row['flag_name'],
             'points' => (int)$row['points'],
-            'submitted_at' => $row['submitted_at']
+            'submitted_at' => $row['submitted_at'],
+            'is_sus' => $row['flag_name'] === 'SUS'
         ];
     }
 }
